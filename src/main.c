@@ -7,33 +7,6 @@ void teste(int num)
 	return ;
 }
 
-/*
-static void logic(char *str)
-{
-	(void)str;
-    char *arg[] = {"tree", NULL};
-    char cwd[256];
-    getcwd(cwd, 256);
-    //printf("teste:%s",cwd);
-    char *executable = "tree";
-    char *which = NULL;
-    char *cmd = NULL;
-    which = getenv("PATH");
-    cmd = strtok(which, ":");
-    while (cmd != NULL) {
-        char path[256];
-        snprintf(path, sizeof(path), "%s/%s", cmd, executable);
-        if (access(path, X_OK) == 0) {
-            // o arquivo existe e é executável
-			printf("\nteste%s e %s\n",path,cwd);
-            execve(path, &arg[0], NULL);
-        }
-        cmd = strtok(NULL, ":");
-    }
-    // se chegamos até aqui, o arquivo "ls" não foi encontrado
-    fprintf(stderr, "ls: comando não encontrado\n");
-}*/
-
 static void easy_one(char *str)
 {
 	char cwd[256];
