@@ -7,33 +7,6 @@ void teste(int num)
 	return ;
 }
 
-/*
-static void logic(char *str)
-{
-	(void)str;
-    char *arg[] = {"tree", NULL};
-    char cwd[256];
-    getcwd(cwd, 256);
-    //printf("teste:%s",cwd);
-    char *executable = "tree";
-    char *which = NULL;
-    char *cmd = NULL;
-    which = getenv("PATH");
-    cmd = strtok(which, ":");
-    while (cmd != NULL) {
-        char path[256];
-        snprintf(path, sizeof(path), "%s/%s", cmd, executable);
-        if (access(path, X_OK) == 0) {
-            // o arquivo existe e é executável
-			printf("\nteste%s e %s\n",path,cwd);
-            execve(path, &arg[0], NULL);
-        }
-        cmd = strtok(NULL, ":");
-    }
-    // se chegamos até aqui, o arquivo "ls" não foi encontrado
-    fprintf(stderr, "ls: comando não encontrado\n");
-}*/
-
 static void easy_one(char *str)
 {
 	char cwd[256];
@@ -51,50 +24,68 @@ static void easy_one(char *str)
 
 static void logic(char *str)
 {
-	(void)str;
-	char *s1[] = {"ls",NULL};
-	char path[256];
+	char *s1[2];
+	char *path;
 	char *comand;
 	comand = calloc(256,1);
-	easy_one(str);
-	char *teste = getenv("PATH");
-	char *outro_teste = strtok(teste,":");
-	strcpy(path,outro_teste);
-	strcpy(comand,"ls");
-	int i = strlen(path);
-	path[i] = '/';
-	i++;
+	char *teste;
+	char *outro_teste;
+	strcpy(comand,str);
+	s1[0] = comand;
+	s1[1] = NULL;
 	int j = 0;
-	while(comand[j])
+	int i = 0;
+	int len = 0;
+	char *cmd;
+	teste = getenv("PATH");
+	cmd = strtok(teste,":");
+	while(cmd != NULL)
 	{
-		path[i+j] = comand[j];
-		j++;
+		path = calloc(256,1);
+		strcpy(path,cmd);
+		path[ft_strlen(path)] = '/';
+		ft_strlcat(path,comand,256);
+		if(access(path,X_OK) == 0)
+		{
+			execve(path,s1,NULL);
+			free(path);
+			break;
+		}
+		cmd = strtok(NULL,":");
+		free(path);
 	}
-	free(comand);
-	//tentar ver se tem o arquivo ls com o acess
+}
 
+void handler(int sig)
+{
+	if(sig == SIGINT)
+	{
+		printf("\n");
+		printf("\033[0;32mminishell$\033[0m ");
+		return ;
+	}
 
-	//(void)comand;
-	path[i+j] = '\0';
-	//while(outro_teste[i])
-	//printf("%s",path);
-	//char *arg[] = {"ls",NULL};
-	execve(path,s1,NULL);
 }
 
 int main(void)
 {
 	char *str;
+	struct sigaction sa;
+	sa.sa_handler = handler;
+	sigemptyset(&sa.sa_mask);
+	sigaddset(&sa.sa_mask,SIGINT);
+	sa.sa_flags = 0;
+	if(sigaction(SIGINT,&sa,NULL) == -1)
+		write(ERROR,"Error\n",6);
 	while(1)
 	{
 		str = calloc(sizeof(1024),1);
 		printf("\033[0;32mminishell$\033[0m");
 		str = readline(" ");
+		str = ft_strtrim(str," ");
+		add_history(str);
 		if(str[0])
-		{
-			add_history(str);
 			logic(str);
-		}
 		free(str);
 	}
 }

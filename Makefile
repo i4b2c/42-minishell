@@ -26,7 +26,8 @@ CINZA_BACK		=		"\033[47m"
 
 CC = cc
 RM = rm -rf
-CFLAGS = -Wall -Wextra -Werror -lreadline
+CFLAGS = -lreadline
+#CFLAGS = -Wall -Wextra -Werror -lreadline
 AR = ar rcs
 EXTRA = minishell a.out
 LIBFT = libft/libft.a
