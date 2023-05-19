@@ -39,6 +39,7 @@ static void logic(char *str)
 	pid = fork();
 	teste = getenv("PATH");
 	outro_teste = strdup(teste);
+	//tem que criar um duplicado porque quando usamos strtok ele avanca na memoria
 	cmd = strtok(outro_teste,":");
 	if(pid == -1)
 	{
