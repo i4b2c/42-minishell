@@ -15,6 +15,12 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+typedef struct t_cmd
+{
+	char *cmd;
+	struct t_cmd *next;
+}	d_cmd;
+
 void init();
 
 #endif
