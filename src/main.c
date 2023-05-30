@@ -10,6 +10,7 @@ static int contar_string(char **str)
 	return i;
 }
 
+
 static int cd_dir(char *str)
 {
 	char *dir;
@@ -17,6 +18,8 @@ static int cd_dir(char *str)
 	char **av;
 	static char *oldPwd;
 	int len;
+	int err_dir;
+	char *temp;
 
 	if(!oldPwd)
 		oldPwd = calloc(1024,1);
@@ -38,6 +41,11 @@ static int cd_dir(char *str)
 			av[1]++;
 			av[1][strlen(av[1])-1] = 0;
 		}
+		if(av[1][0] == '/')
+		{
+			strcpy(oldPwd,dir);
+			strcpy(dir,"/");
+		}
 		if(!strcmp(av[1],".."))
 		{
 			strcpy(oldPwd,dir);
@@ -53,15 +61,22 @@ static int cd_dir(char *str)
 		}
 		else if(!strcmp(av[1],"-"))
 		{
+			temp = calloc(1024,1);
 			printf("%s\n",oldPwd);
+			strcpy(temp,dir);
 			strcpy(dir,oldPwd);
+			strcpy(oldPwd,temp);
+			free(temp);
 		}
 		else
 		{
+			strcpy(oldPwd,dir);
 			strcat(dir,"/");
 			strcat(dir,av[1]);
 		}
-		chdir(dir);
+		err_dir = chdir(dir);
+		if(err_dir != 0)
+			perror("chdir");
 		free(cwd);
 		free(dir);
 		return 1;

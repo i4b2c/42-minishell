@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <errno.h>
 
 typedef struct t_cmd
 {
