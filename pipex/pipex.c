@@ -23,6 +23,7 @@ void	exec(char *command, char **envp)
 	check = check_command(cmd[0], path);
 	if (check != NULL)
 		execve(check, cmd, envp);
+	write(2,"command not found\n",18);
 	return ;
 }
 
