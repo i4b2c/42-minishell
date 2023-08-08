@@ -87,6 +87,14 @@ void handler(int sig)
 		rl_redisplay();
 		kill(pid, SIGKILL);
 	}
+	else if(sig == SIGINT && pid == -1)
+	{
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+
 }
 
 void teste(int sig)
