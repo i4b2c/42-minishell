@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 13:32:41 by icaldas           #+#    #+#             */
-/*   Updated: 2023/07/26 13:34:01 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/08/08 14:33:44 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	exec(char *command, char **envp)
 	check = check_command(cmd[0], path);
 	if (check != NULL)
 		execve(check, cmd, envp);
+	if(access(cmd[0],X_OK) == 0)
+		execve(cmd[0],cmd,envp);
 	write(2,"command not found\n",18);
 	return ;
 }
