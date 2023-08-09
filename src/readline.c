@@ -13,6 +13,51 @@ rl_redisplay
 add_history
 */
 
+// void swap_strings(char **a, char **b) {
+//     char *temp = *a;
+//     *a = *b;
+//     *b = temp;
+// }
+
+// int get_size(char **str)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while(str[i] != NULL)
+// 		i++;
+// 	return i;
+// }
+
+// // Função para organizar um array de strings em ordem crescente
+// char **organize_strings(char **str) {
+// 	int count;
+// 	int i = 0;
+// 	char **temp;
+
+// 	count = get_size(str);
+// 	printf("%d\n",count);
+// 	temp = malloc(sizeof(char **));
+// 	while(i <= count)
+// 	{
+// 		printf("%s\n",str[i]);
+// 		i++;
+// 		//temp[i] = malloc(ft_strlen(str[i]) * sizeof(char));
+// 		//ft_strcpy(temp[i],str[i]);
+// 		//i++;
+// 	}
+// 	temp[i] = NULL;
+//     // for (int i = 0; i < count - 1; i++) {
+//     //     for (int j = 0; j < count - i - 1; j++) {
+//     //         if (strcmp(temp[j], temp[j + 1]) > 0) {
+//     //             swap_strings(&temp[j], &temp[j + 1]);
+//     //         }
+//     //     }
+//     // }
+// 	return NULL;
+// 	// return temp;
+// }
+
 int check_option(char *str, int i)
 {
 	while(str[i] == ' ' && str[i])
@@ -105,6 +150,89 @@ void exec_chdir(char *input)
 	return ;
 }
 
+//string vector cpy
+// void ft_strvcpy(char **env,char **envp)
+// {
+
+// }
+
+void organize_strings(char **new_envp) {
+    char *temp;
+    int i, j;
+
+    i = 0;
+    while (new_envp[i] != NULL) {
+        j = i + 1; // Começa a verificação na próxima posição
+        while (new_envp[j] != NULL) {
+            if (ft_strncmp(new_envp[i], new_envp[j], ft_strlen(new_envp[j])) > 0) {
+                temp = new_envp[i];
+                new_envp[i] = new_envp[j];
+                new_envp[j] = temp;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+
+void exec_export(char *input, char **envp)
+{
+	//(void)input;
+    char **new_envp;
+    int i = 0;
+	int check;
+
+	check = 0;
+    while (envp[i] != NULL) {
+        i++;
+    }
+
+    new_envp = malloc((i + 1) * sizeof(char *));
+
+    if (new_envp == NULL) {
+        perror("Erro ao alocar memória");
+        exit(EXIT_FAILURE);
+    }
+
+    //copiar
+    for (int j = 0; j < i; j++) {
+        new_envp[j] = malloc(strlen(envp[j]) + 1);
+        if (new_envp[j] == NULL) {
+            perror("Erro ao alocar memória");
+            exit(EXIT_FAILURE);
+        }
+        strcpy(new_envp[j], envp[j]);
+    }
+
+    new_envp[i] = NULL;
+	if(strncmp(input,"export",6) == 0)
+		check = 1;
+	if(check == 1)
+		organize_strings(new_envp);
+
+	//imprimir para checkar
+	//depois para imprimir certo o export posso imprimir ate o '='
+	//depois imprimir '"'
+	//acaba de imprimir ate o '\n' com o '\n' fora do output
+	//imprimi '"' e um \n e ta feito
+    i = 0;
+    while (new_envp[i] != NULL) {
+		if(check == 1)
+			ft_printf("declare -x ");
+        printf("%s\n", new_envp[i]);
+        i++;
+    }
+
+    // free memory
+    for (int j = 0; j < i; j++) {
+        free(new_envp[j]);
+    }
+    free(new_envp);
+}
+
+//extern char **__environ;
+
 int main(int ac, char **av, char **envp)
 {
 	char *input;
@@ -120,10 +248,11 @@ int main(int ac, char **av, char **envp)
 			free(input);
 			break;
 		}
+		else if(strncmp(input,"export",6) == 0
+			|| strncmp(input,"env",3) == 0)
+			exec_export(input,envp);
 		else if(strncmp(input,"cd",2) == 0)
-		{
 			exec_chdir(input);
-		}
 		else
 		{
 			pid = fork();
@@ -139,3 +268,4 @@ int main(int ac, char **av, char **envp)
 	}
 	return 0;
 }
+
