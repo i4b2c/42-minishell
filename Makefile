@@ -50,7 +50,7 @@ RM = rm -f
 MKDIR = mkdir -p
 
 #FLAGS
-FLAGS = -Werror -Wextra -Wall -lreadline
+FLAGS = -g -Werror -Wextra -Wall -lreadline
 OUTPUT = -o
 
 all: $(NAME)

@@ -226,8 +226,8 @@ void exec_export(char *input, char **envp)
 	//imprimi '"' e um \n e ta feito
     i = 0;
     while (new_envp[i] != NULL) {
-		if(check == 1)
-			ft_printf("declare -x ");
+		//if(check == 1)
+		//	ft_printf("declare -x ");
         printf("%s\n", new_envp[i]);
         i++;
     }
