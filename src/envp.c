@@ -2,14 +2,8 @@
 
 void print_env(t_data *data)
 {
-	char **temp;
 	t_varlst *temp_var;
-	int i;
 
-	i = 0;
-	temp = data->envp;
-	while(temp[i])
-		ft_printf("%s\n",temp[i++]);
 	temp_var = data->var_head;
 	while(temp_var != NULL)
 	{

@@ -15,13 +15,24 @@
 char *get_input(void)
 {
 	char *input;
+	char *
 
-	input = readline("\033[0;32mminishell $>\033[0m ");
-	if(input[0] == '|' || input[0] == '}'
-		|| input[0] == '&' || input[0] == ')'
-		|| input[0] == ']')
-			error(INPUT,input);
-	else if(input[0] == '>' || input[0] == '<')
+	temp = readline("\033[0;32mminishell $>\033[0m ");
+	if(temp[0] == '|' || temp[0] == '}'
+		|| temp[0] == '&' || temp[0] == ')'
+		|| temp[0] == ']')
+		{
+			error(INPUT,temp);
+			free(temp);
+			return NULL;
+		}
+	else if(temp[0] == '>' || temp[0] == '<')
+	{
 		error(INPUT_NEW_LINE,NULL);
+		free(temp);
+		return NULL;
+	}
+	input = ft_strtrim(temp," \t");
+	free(temp);
 	return (input);
 }

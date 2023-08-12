@@ -48,29 +48,15 @@ char *copy_var(t_varlst *temp)
 char **replicate_string(t_data *data)
 {
 	char **temp_envp;
-	int num_string;
 	int i;
 	t_varlst *temp;
 
-	num_string = 0;
-	while(data->envp[num_string])
-		num_string++;
-	temp_envp = malloc(sizeof(char *) * (num_string + 1 + num_data_env(data)));
+	temp_envp = malloc(sizeof(char *) * (1 + num_data_env(data)));
 	i = 0;
-	while(i < num_string)
-	{
-		temp_envp[i] = malloc(ft_strlen(data->envp[i]) + 1);
-		ft_strcpy(temp_envp[i],data->envp[i]);
-		i++;
-	}
 	temp = data->var_head;
 	while(temp != NULL)
 	{
-		//temp_envp[i] = malloc(ft_strlen(temp->var_name) + ft_strlen(temp->var_value) + 2);
 		temp_envp[i] = copy_var(temp);
-		// ft_strlcat(temp_envp[i],temp->var_name,ft_strlen(temp->var_name)-1);
-		// ft_strlcat(temp_envp[i],"=",1);
-		// ft_strlcat(temp_envp[i],temp->var_value,ft_strlen(temp->var_value));
 		temp = temp->next;
 		i++;
 	}
