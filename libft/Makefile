@@ -49,6 +49,7 @@ SRC = src/ft_isalpha.c \
       src/ft_printf.c \
       ../pipex/pipex.c \
       ../pipex/utils.c \
+      src/ft_strlen.c \
 
 BONUS_SRC = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c\
 ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c

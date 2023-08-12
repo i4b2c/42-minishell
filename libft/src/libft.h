@@ -98,5 +98,6 @@ char			*get_next_line(int x);
 char			*get_str(int x, char *y);
 char			*get_new_str(char *x);
 char			*get_line(char *x);
+int				ft_strlen(char *str);
 
 #endif

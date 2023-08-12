@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/12 01:47:03 by marvin            #+#    #+#             */
-/*   Updated: 2023/08/12 01:47:03 by marvin           ###   ########.fr       */
+/*   Created: 2023/08/12 01:52:59 by marvin            #+#    #+#             */
+/*   Updated: 2023/08/12 01:52:59 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/minishell.h"
 
-int	ft_strlen(char *str)
+char *get_input(void)
 {
-	int	i;
+	char *input;
 
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	input = readline("\033[0;32mminishell $>\033[0m ");
+	if(input[0] == '|' || input[0] == '}'
+		|| input[0] == '&' || input[0] == ')'
+		|| input[0] == ']')
+			error(INPUT,input);
+	else if(input[0] == '>' || input[0] == '<')
+		error(INPUT_NEW_LINE,NULL);
+	return (input);
 }

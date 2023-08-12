@@ -19,6 +19,8 @@ static int	palavras(char const *s, char c)
 
 	i = 0;
 	contagem = 0;
+	if (s == NULL)
+		return (0);
 	while (s[i])
 	{
 		while (s[i] == c && s[i] != '\0')
@@ -49,7 +51,7 @@ char	**ft_split(char const *s, char c)
 	int		pos;
 	int		res_size;
 
-	if (!s)
+	if (!s || !c)
 		return (0);
 	i = 0;
 	x = 0;

@@ -34,14 +34,17 @@ LIBFT = libft/
 
 #ARQUIVOS
 LIBFT_A = libft/libft.a
-SRCS =	\
-#$(SRC_DIR)/readline.c \
+SRCS =	$(SRC_DIR)/data.c\
+		$(SRC_DIR)/env.c \
+		$(SRC_DIR)/free.c \
+		$(SRC_DIR)/input.c \
 
 #ARQUIVOS .o
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 #MAIN
-MAIN = $(SRC_DIR)/readline.c
+MAIN = $(SRC_DIR)/main.c
+#$(SRC_DIR)/readline.c
 
 #COMANDOS
 CC = cc
@@ -70,7 +73,7 @@ libft_fclean:
 
 $(NAME): $(OBJS) libft_compile
 	@echo $(VERDE)"Criando executavel minishell" $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
-	@$(CC) $(MAIN) $(LIBFT_A) $(OBJS) $(FLAGS) $(OUTPUT) $(NAME)
+	@$(CC) $(MAIN) $(OBJS) $(LIBFT_A) $(FLAGS) $(OUTPUT) $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(MKDIR) $(OBJ_DIR)
