@@ -33,17 +33,21 @@ int get_index_env(char *str)
 
 void add_list(t_data *data,t_varlst *temp_var)
 {
+	t_varlst *atual;
+
+	atual = NULL;
 	if(data->var_head == NULL)
 		data->var_head = temp_var;
 	else
 	{
-		while(data->var_head->next != NULL)
-			data->var_head = data->var_head->next;
-		data->var_head->next = temp_var;
+		atual = data->var_head;
+		while(atual->next != NULL)
+			atual = atual->next;
+		atual->next = temp_var;
 	}
 }
 
-int get_index_fenv(char *str)
+int strtok_env(char *str)
 {
 	int i;
 
@@ -67,27 +71,49 @@ int get_index_eenv(char *str)
 	return j;
 }
 
+char *ft_mllstrcpy(char *str)
+{
+	int i;
+	int len;
+	char *temp;
+
+	i = 0;
+	len = ft_strlen(str);
+	temp = malloc(sizeof(char) * (len + 1));
+	while(str[i])
+	{
+		temp[i] = str[i];
+		i++;
+	}
+	temp[i] = 0;
+	return temp;
+}
+
 void add_env(t_data *data,char *var)
 {
 	t_varlst *temp_var;
 	char **envp;
-	int i;
+	char **command;
 	int j;
 
-	i = get_index_env(var) + 1;
-	temp_var = malloc(sizeof(t_varlst));
-	if(!temp_var)
-		error(MALLOC,NULL);
 	envp = ft_split(var,' ');
 	j = 0;
 	while(envp[++j])
 	{
-		temp_var->var_name = malloc(get_index_fenv(envp[j]) * sizeof(char));
-		temp_var->var_value = malloc(get_index_eenv(envp[j]) + 1 * sizeof(char));
-		temp_var->next = NULL;
-		ft_strlcpy(temp_var->var_name,envp[j],get_index_fenv(envp[j])+1);
-		ft_strcpy(temp_var->var_value,envp[j]+get_index_fenv(envp[j])+1);
-		add_list(data,temp_var);
+		temp_var = malloc(sizeof(t_varlst));
+		if(!temp_var)
+			error(MALLOC,NULL);
+		command = ft_split(envp[j],'=');
+		if(!command[1])
+			return ;
+		else
+		{
+				temp_var->var_name = ft_mllstrcpy(command[0]);
+				temp_var->var_value = ft_mllstrcpy(command[1]);
+				temp_var->next = NULL;
+				add_list(data,temp_var);
+				temp_var = temp_var->next;
+		}
 	}
 }
 
