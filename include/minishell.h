@@ -30,7 +30,7 @@
 # include <fcntl.h>
 # include <limits.h>
 # include <stdbool.h>
-#include <sys/errno.h>
+# include <sys/errno.h>
 // #include <sys/kern_memorystatus.h>
 
 #define MALLOC "minishell: Error Memory Allocation\n"
@@ -71,7 +71,16 @@ void error(char *str, char *str_extra);
 char *get_input(void);
 
 void free_data(t_data **data);
+void free_strings(char **str);
 
 void exec(char *command);
+
+void print_export(t_data *data);
+
+void print_string(char **str);
+
+void child_process(int sig);
+void dimiss_signal(int sig);
+void init_signal(void);
 
 #endif

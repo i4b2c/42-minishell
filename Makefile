@@ -39,6 +39,9 @@ SRCS =	$(SRC_DIR)/data.c\
 		$(SRC_DIR)/free.c \
 		$(SRC_DIR)/input.c \
 		$(SRC_DIR)/exec.c \
+		$(SRC_DIR)/export.c \
+		$(SRC_DIR)/print.c \
+		$(SRC_DIR)/signal.c \
 
 #ARQUIVOS .o
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))

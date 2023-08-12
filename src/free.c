@@ -12,6 +12,17 @@
 
 #include "../include/minishell.h"
 
+
+void free_strings(char **str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+		free(str[i++]);
+	free(str);
+}
+
 void free_data(t_data **data)
 {
 	t_varlst *temp_var;
