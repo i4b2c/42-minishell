@@ -23,7 +23,7 @@ int main(int ac, char **av, char **envp)
 		{
 			pid = fork();
 			if(pid == (pid_t)0)
-				exec(input,envp);
+				exec(input);
 			else
 				waitpid(pid,NULL,0);
 			free(input);

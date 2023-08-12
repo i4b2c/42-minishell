@@ -14,9 +14,10 @@
 #define MINISHELL_H
 
 #include "../libft/src/libft.h"
-#include "../pipex/pipex.h"
+//#include "../.pipex/pipex.h"
 
 # include <string.h>
+# include <sys/wait.h>
 # include <stdio.h>
 # include <strings.h>
 # include <stdlib.h>
@@ -70,5 +71,7 @@ void error(char *str, char *str_extra);
 char *get_input(void);
 
 void free_data(t_data **data);
+
+void exec(char *command);
 
 #endif

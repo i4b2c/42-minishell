@@ -35,9 +35,10 @@ LIBFT = libft/
 #ARQUIVOS
 LIBFT_A = libft/libft.a
 SRCS =	$(SRC_DIR)/data.c\
-		$(SRC_DIR)/env.c \
+		$(SRC_DIR)/envp.c \
 		$(SRC_DIR)/free.c \
 		$(SRC_DIR)/input.c \
+		$(SRC_DIR)/exec.c \
 
 #ARQUIVOS .o
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
@@ -59,7 +60,7 @@ OUTPUT = -o
 all: $(NAME)
 
 libft_compile:
-	@echo $(AMARELO)"Compilando libft     " $(<:src/%=%) $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(AMARELO)"Compilando\tlibft     " $(<:src/%=%) $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@make -C $(LIBFT) --silent
 	@echo $(VERDE)"Libft compilado     " $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 
