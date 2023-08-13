@@ -112,9 +112,9 @@ void add_env(t_data *data,char *var)
 	}
 }
 
-bool check_input_env(char *var)
-{
-	if(!ft_isalpha(var[0]))
-		return false;
-	return true;
-}
+// bool check_input_env(char *var)
+// {
+// 	if(!ft_isalpha(var[0]))
+// 		return false;
+// 	return true;
+// }

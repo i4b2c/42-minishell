@@ -38,6 +38,13 @@ void change_exist_env(t_data *data, char **command)
 	return ;
 }
 
+bool check_input_env(char *str)
+{
+	if(ft_isalpha(str[0]))
+		return false;
+	return true;
+}
+
 void change_env(t_data *data, char *input)
 {
 	t_varlst *temp_var;
@@ -49,21 +56,26 @@ void change_env(t_data *data, char *input)
 	j = 0;
 	while(envp[++j])
 	{
-		temp_var = malloc(sizeof(t_varlst));
-		if(!temp_var)
-			error(MALLOC,NULL);
-		command = ft_split(envp[j],'=');
-		if(check_exist_env(data,command[0]))
-			change_exist_env(data,command);
+		if(check_input_env(envp[j]))
+			ft_printf("minishell: `%s': not a valid identifier\n",envp[j]);
 		else
 		{
-				temp_var->var_name = ft_mllstrcpy(command[0]);
-				temp_var->var_value = ft_mllstrcpy(command[1]);
-				temp_var->next = NULL;
-				add_list(data,temp_var);
-				temp_var = temp_var->next;
+			temp_var = malloc(sizeof(t_varlst));
+			if(!temp_var)
+				error(MALLOC,NULL);
+			command = ft_split(envp[j],'=');
+			if(check_exist_env(data,command[0]))
+				change_exist_env(data,command);
+			else
+			{
+					temp_var->var_name = ft_mllstrcpy(command[0]);
+					temp_var->var_value = ft_mllstrcpy(command[1]);
+					temp_var->next = NULL;
+					add_list(data,temp_var);
+					temp_var = temp_var->next;
+			}
+			free_strings(command);
 		}
-		free_strings(command);
 	}
 	free_strings(envp);
 }

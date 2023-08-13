@@ -37,6 +37,7 @@
 #define ARGS "Invalid argument: ./minishell\n"
 #define INPUT "minishell: syntax error near unexpected token "
 #define INPUT_NEW_LINE "minishell: syntax error near unexpected token `newline'\n"
+#define SYNTAX_ENVP ""
 
 typedef struct s_statlst
 {
