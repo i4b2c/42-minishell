@@ -22,9 +22,10 @@ void exec_unset(t_data *data, char *input)
 				free(temp_var->next->var_value);
 				free(temp_var->next);
 				temp_var->next = temp_teste;
-				return ;
+				break;
 			}
 			temp_var = temp_var->next;
 		}
 	}
+	free_strings(command);
 }
