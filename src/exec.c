@@ -70,7 +70,7 @@ void	exec(char *command)
 		execve(check, cmd, NULL);
 	if(access(cmd[0],X_OK) == 0)
 		execve(cmd[0],cmd, NULL);
-	write(2,"command not found\n",18);
+	write(2,"minishell : command not found\n",30);
 	free(command);
 	exit(0);
 }
