@@ -83,4 +83,7 @@ void child_process(int sig);
 void dimiss_signal(int sig);
 void init_signal(void);
 
+char *ft_mllstrcpy(char *str);
+void add_list(t_data *data,t_varlst *temp_var);
+
 #endif

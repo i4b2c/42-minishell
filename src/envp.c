@@ -108,6 +108,7 @@ void add_env(t_data *data,char *var)
 				add_list(data,temp_var);
 				temp_var = temp_var->next;
 		}
+		free_strings(command);
 	}
 }
 
