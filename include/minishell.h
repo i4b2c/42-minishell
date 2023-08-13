@@ -74,7 +74,7 @@ char *get_input(void);
 void free_data(t_data **data);
 void free_strings(char **str);
 
-void exec(char *command);
+void exec(char *command,t_data *data);
 
 void print_export(t_data *data);
 
@@ -93,5 +93,10 @@ void exec_chdir(char *str);
 int len_strings(char **str);
 
 char *ft_mllstrcpy(char *str);
+
+void exec_unset(t_data *data, char *input);
+
+int search_envp(t_data *data, char *cmd);
+void exec_echo(t_data *data, char *input);
 
 #endif

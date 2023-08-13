@@ -57,14 +57,34 @@ char	*check_command(char *command, char **path)
 	return (NULL);
 }
 
-void	exec(char *command)
+char *ft_getenv(const char *str,t_data *data)
+{
+	t_varlst *temp_var;
+
+	temp_var = data->var_head;
+	while(temp_var)
+	{
+		if(!strncmp(temp_var->var_name,str,4))
+			return (ft_mllstrcpy(temp_var->var_value));
+		temp_var = temp_var->next;
+	}
+	return NULL;
+}
+
+void	exec(char *command,t_data *data)
 {
 	char	*path;
 	char	*check;
 	char	**cmd;
 
 	cmd = ft_split(command, ' ');
-	path = getenv("PATH");
+	path = ft_getenv("PATH",data);
+	if(path == NULL)
+	{
+		write(2,"minishell : command not found\n",30);
+		free_strings(cmd);
+		exit(0);
+	}
 	check = check_command(cmd[0], ft_split(path,':'));
 	if (check != NULL)
 		execve(check, cmd, NULL);
