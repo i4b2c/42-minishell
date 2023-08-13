@@ -40,8 +40,12 @@ SRCS =	$(SRC_DIR)/data.c\
 		$(SRC_DIR)/input.c \
 		$(SRC_DIR)/exec.c \
 		$(SRC_DIR)/export.c \
-		$(SRC_DIR)/print.c \
 		$(SRC_DIR)/signal.c \
+		$(SRC_DIR)/chdir.c \
+		$(SRC_DIR)/util_string.c \
+		$(SRC_DIR)/util_envp.c \
+		$(SRC_DIR)/util.c \
+		$(SRC_DIR)/error.c \
 
 #ARQUIVOS .o
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))

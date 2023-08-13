@@ -1,30 +1,5 @@
 #include "../include/minishell.h"
 
-void print_env(t_data *data)
-{
-	t_varlst *temp_var;
-
-	temp_var = data->var_head;
-	while(temp_var != NULL)
-	{
-		ft_printf("%s=%s\n",temp_var->var_name,temp_var->var_value);
-		temp_var = temp_var->next;
-	}
-
-}
-
-int get_index_env(char *str)
-{
-	int i;
-
-	i = 0;
-	while(str[i] != '=' && str[i] != 0)
-		i++;
-	return (i);
-}
-//testes
-
-
 void add_list(t_data *data,t_varlst *temp_var)
 {
 	t_varlst *atual;
@@ -41,80 +16,78 @@ void add_list(t_data *data,t_varlst *temp_var)
 	}
 }
 
-int strtok_env(char *str)
+bool check_exist_env(t_data *data, char *input)
 {
-	int i;
+	t_varlst *temp_var;
 
-	i = 0;
-	while(str[i] && str[i] != '=')
-		i++;
-	return i;
-}
-
-int get_index_eenv(char *str)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while(str[i] && str[i] != '=')
-		i++;
-	j = 0;
-	while(str[i+j])
-		j++;
-	return j;
-}
-
-char *ft_mllstrcpy(char *str)
-{
-	int i;
-	int len;
-	char *temp;
-
-	i = 0;
-	len = ft_strlen(str);
-	temp = malloc(sizeof(char) * (len + 1));
-	while(str[i])
+	temp_var = data->var_head;
+	while(temp_var)
 	{
-		temp[i] = str[i];
-		i++;
+		if(!ft_strncmp(temp_var->var_name,input,ft_strlen(input)))
+			return true;
+		temp_var = temp_var->next;
 	}
-	temp[i] = 0;
-	return temp;
+	return false;
 }
 
-void add_env(t_data *data,char *var)
+void change_exist_env(t_data *data, char **command)
+{
+	t_varlst *temp_var;
+
+	temp_var = data->var_head;
+	while(temp_var)
+	{
+		if(!ft_strncmp(temp_var->var_name,command[0],ft_strlen(command[0])))
+		{
+			if(temp_var->var_value)
+				free(temp_var->var_value);
+			temp_var->var_value = malloc(sizeof(char) * (ft_strlen(command[1]) + 1));
+			ft_strcpy(temp_var->var_value,command[1]);
+			return ;
+		}
+		temp_var = temp_var->next;
+	}
+	return ;
+}
+
+bool check_input_env(char *str)
+{
+	if(ft_isalpha(str[0]))
+		return false;
+	return true;
+}
+
+void change_env(t_data *data, char *input)
 {
 	t_varlst *temp_var;
 	char **envp;
 	char **command;
 	int j;
 
-	envp = ft_split(var,' ');
+	envp = ft_split(input,' ');
 	j = 0;
 	while(envp[++j])
 	{
-		temp_var = malloc(sizeof(t_varlst));
-		if(!temp_var)
-			error(MALLOC,NULL);
-		command = ft_split(envp[j],'=');
-		if(!command[1])
-			return ;
+		if(check_input_env(envp[j]))
+			ft_printf("minishell: `%s': not a valid identifier\n",envp[j]);
 		else
 		{
-				temp_var->var_name = ft_mllstrcpy(command[0]);
-				temp_var->var_value = ft_mllstrcpy(command[1]);
-				temp_var->next = NULL;
-				add_list(data,temp_var);
-				temp_var = temp_var->next;
+			temp_var = malloc(sizeof(t_varlst));
+			if(!temp_var)
+				error(MALLOC,NULL);
+			command = ft_split(envp[j],'=');
+			if(check_exist_env(data,command[0]))
+				change_exist_env(data,command);
+			else
+			{
+					temp_var->var_name = ft_mllstrcpy(command[0]);
+					temp_var->var_value = ft_mllstrcpy(command[1]);
+					temp_var->next = NULL;
+					add_list(data,temp_var);
+					temp_var = temp_var->next;
+			}
+			free_strings(command);
 		}
-		free_strings(command);
 	}
+	free_strings(envp);
 }
-
-// bool check_input_env(char *var)
-// {
-// 	if(!ft_isalpha(var[0]))
-// 		return false;
-// 	return true;
-// }
