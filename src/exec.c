@@ -90,7 +90,46 @@ void	exec(char *command,t_data *data)
 		execve(check, cmd, NULL);
 	if(access(cmd[0],X_OK) == 0)
 		execve(cmd[0],cmd, NULL);
+	dup2(STDOUT_FILENO,1);
 	write(2,"minishell : command not found\n",30);
 	free(command);
 	exit(0);
+}
+
+void check_exec(t_data *data, char *input)
+{
+	pid_t pid;
+
+	add_history(input);
+	if(!strncmp(input,"export",6))
+	{
+		if(ft_strlen(input) > 6)
+			change_env(data,input);
+		else
+			print_export(data);
+	}
+	else if(!strncmp(input,"env",3))
+		print_env(data);
+	else if(!strncmp(input,"cd",2))
+		exec_chdir(input);
+	else if(!strncmp(input,"echo",4))
+		exec_echo(data,input);
+	else if(!strncmp(input,"unset",5))
+		exec_unset(data,input);
+	else if(input[0] == 0)
+		free(input);
+	else
+	{
+		pid = fork();
+		if(pid == (pid_t)0)
+		{
+			signal(SIGINT,child_process);
+			exec(input,data);
+			free(input);
+			exit(0);
+		}
+		else
+			waitpid(pid,NULL,0);
+		free(input);
+	}
 }

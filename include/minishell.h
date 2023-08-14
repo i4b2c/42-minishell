@@ -98,5 +98,9 @@ void exec_unset(t_data *data, char *input);
 
 int search_envp(t_data *data, char *cmd);
 void exec_echo(t_data *data, char *input);
+void check_exec(t_data *data, char *input);
+
+
+char *change_stdout(char *str);
 
 #endif

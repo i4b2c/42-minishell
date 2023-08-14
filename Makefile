@@ -48,6 +48,7 @@ SRCS =	$(SRC_DIR)/data.c\
 		$(SRC_DIR)/error.c \
 		$(SRC_DIR)/echo.c \
 		$(SRC_DIR)/unset.c \
+		$(SRC_DIR)/redirect.c \
 
 #ARQUIVOS .o
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
