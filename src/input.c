@@ -15,7 +15,7 @@
 char *get_input(void)
 {
 	char *input;
-	char *
+	char *temp;
 
 	temp = readline("\033[0;32mminishell $>\033[0m ");
 	if(temp[0] == '|' || temp[0] == '}'
