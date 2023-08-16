@@ -39,6 +39,21 @@
 #define INPUT_NEW_LINE "minishell: syntax error near unexpected token `newline'\n"
 #define SYNTAX_ENVP ""
 
+typedef enum e_type
+{
+	NORMAL,
+	RDR_OUT,
+	RDR_IN,
+	PIPE,
+}	t_type;
+
+typedef struct s_tokens
+{
+	char *command;
+	t_type type;
+	struct s_tokens *next;
+}	t_tokens;
+
 typedef struct s_statlst
 {
 	int ac;
@@ -56,6 +71,9 @@ typedef struct s_varlst
 typedef struct s_data
 {
 	char **envp;
+	// char **input;
+	// t_type type;
+	t_tokens *tokens_head;
 	t_varlst *var_head;
 	t_statlst *stat_head;
 }	t_data;
@@ -102,5 +120,8 @@ void check_exec(t_data *data, char *input);
 
 
 char *change_stdout(char *str);
+char *change_stdin(char *str);
+
+void execve_tokens(char **command,t_data *data);
 
 #endif

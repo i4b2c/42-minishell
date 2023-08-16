@@ -36,14 +36,12 @@ void free_data(t_data **data)
 		free((*data)->var_head);
 		(*data)->var_head = temp_var;
 	}
-	//free((*data)->var_head);
 	while((*data)->stat_head != NULL)
 	{
 		temp_stat = (*data)->stat_head->next;
 		free((*data)->stat_head);
 		(*data)->stat_head = temp_stat;
 	}
-	//free((*data)->stat_head);
 	free(*data);
 	*data = NULL;
 }

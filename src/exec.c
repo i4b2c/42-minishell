@@ -71,6 +71,30 @@ char *ft_getenv(const char *str,t_data *data)
 	return NULL;
 }
 
+void execve_tokens(char **command,t_data *data)
+{
+	char *path;
+	char *check;
+
+	path = ft_getenv("PATH",data);
+	if(!path)
+	{
+		write(2,"minishell : command not found\n",30);
+		free_strings(command);
+		exit(0);
+	}
+	int i = 0;
+	check = check_command(command[0],ft_split(path,':'));
+	if(check)
+		execve(check,command,NULL);
+	if(!access(command[0],X_OK))
+		execve(command[0],command,NULL);
+	dup2(STDOUT_FILENO,1);
+	write(2,"minishell : command not found\n",30);
+	free(command);
+	exit(0);
+}
+
 void	exec(char *command,t_data *data)
 {
 	char	*path;
@@ -100,7 +124,6 @@ void check_exec(t_data *data, char *input)
 {
 	pid_t pid;
 
-	add_history(input);
 	if(!strncmp(input,"export",6))
 	{
 		if(ft_strlen(input) > 6)
