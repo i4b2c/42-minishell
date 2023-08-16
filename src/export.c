@@ -80,7 +80,7 @@ void sort_string(char **str)
 		j = 0;
 		while(j < num_string - i - 1)
 		{
-			if(strcmp(str[j],str[j+1]) > 0)
+			if(ft_strncmp(str[j],str[j+1],ft_strlen(str[j+1])) > 0)
 			{
 				temp = str[j];
 				str[j] = str[j+1];

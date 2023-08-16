@@ -119,9 +119,15 @@ void exec_echo(t_data *data, char **input);
 void check_exec(t_data *data, char *input);
 
 
-char *change_stdout(char *str);
-char *change_stdin(char *str);
+void change_stdout(char *str);
+void change_stdin(char *str);
 
-void execve_tokens(char **command,t_data *data);
+void ft_execve(char **command,t_data *data);
+void exec_tokens(t_data *data);
+
+t_tokens *tokens_input(char *input);
+void add_token(t_tokens **head,char *str,t_type type);
+
+void free_tokens(t_data *data);
 
 #endif

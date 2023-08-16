@@ -45,3 +45,17 @@ void free_data(t_data **data)
 	free(*data);
 	*data = NULL;
 }
+
+void free_tokens(t_data *data)
+{
+	t_tokens *temp_tokens;
+
+	while(data->tokens_head != NULL)
+	{
+		temp_tokens = data->tokens_head->next;
+		free(data->tokens_head->command);
+		free(data->tokens_head);
+		data->tokens_head = temp_tokens;
+	}
+	data->tokens_head = NULL;
+}

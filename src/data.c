@@ -70,9 +70,5 @@ t_data *get_data(int ac, char **av, char **envp)
 	temp_data->envp = envp;
 	temp_data->stat_head = get_stat(ac, av);
 	temp_data->var_head = get_var(envp);
-	// temp_data->bt_head->left = NULL;
-	// temp_data->bt_head->right = NULL;
-	// temp_data->bt_head->command = NULL;
-	//temp_data->var_head->next = NULL;
 	return (temp_data);
 }

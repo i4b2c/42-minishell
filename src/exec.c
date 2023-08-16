@@ -1,42 +1,5 @@
 #include "../include/minishell.h"
 
-void	ft_strcpy_path(char *s1, char *s2)
-{
-	int	i;
-	int	j;
-
-	i = 5;
-	j = 0;
-	while (s2[i] != 0)
-	{
-		s1[j] = s2[i];
-		i++;
-		j++;
-	}
-}
-
-char	**getpath(char **str)
-{
-	int		i;
-	char	*path_simple;
-	char	**path;
-
-	i = 0;
-	while (str[i] != NULL)
-	{
-		if (!(ft_strncmp("PATH=", str[i], 5)))
-		{
-			path_simple = malloc(ft_strlen(str[i]));
-			ft_strcpy_path(path_simple, str[i]);
-		}
-		i++;
-	}
-	path = NULL;
-	path = ft_split(path_simple, ':');
-	free(path_simple);
-	return (path);
-}
-
 char	*check_command(char *command, char **path)
 {
 	char	*teste;
@@ -71,7 +34,7 @@ char *ft_getenv(const char *str,t_data *data)
 	return NULL;
 }
 
-void execve_tokens(char **command,t_data *data)
+void ft_execve(char **command,t_data *data)
 {
 	char *path;
 	char *check;
@@ -95,64 +58,60 @@ void execve_tokens(char **command,t_data *data)
 	exit(0);
 }
 
-void	exec(char *command,t_data *data)
+void exec_tokens(t_data *data)
 {
-	char	*path;
-	char	*check;
-	char	**cmd;
-
-	cmd = ft_split(command, ' ');
-	path = ft_getenv("PATH",data);
-	if(path == NULL)
-	{
-		write(2,"minishell : command not found\n",30);
-		free_strings(cmd);
-		exit(0);
-	}
-	check = check_command(cmd[0], ft_split(path,':'));
-	if (check != NULL)
-		execve(check, cmd, NULL);
-	if(access(cmd[0],X_OK) == 0)
-		execve(cmd[0],cmd, NULL);
-	dup2(STDOUT_FILENO,1);
-	write(2,"minishell : command not found\n",30);
-	free(command);
-	exit(0);
-}
-
-void check_exec(t_data *data, char *input)
-{
+	char **command;
+	int len;
+	t_tokens *temp;
+	int i;
 	pid_t pid;
 
-	if(!strncmp(input,"export",6))
+	i = 0;
+	temp = data->tokens_head;
+	len = 0;
+	while(temp)
 	{
-		if(ft_strlen(input) > 6)
-			change_env(data,input);
+		temp = temp->next;
+		len++;
+	}
+	command = malloc(sizeof(char *) * (len + 1));
+	temp = data->tokens_head;
+	while(temp)
+	{
+		if(temp->type == NORMAL)
+		{
+			command[i] = ft_mllstrcpy(temp->command);
+			i++;
+		}
+		else if(temp->type == RDR_OUT)
+			change_stdout(temp->command);
+		else if(temp->type == RDR_IN)
+			change_stdin(temp->command);
+		temp = temp->next;
+	}
+	command[i] = NULL;
+	if(!ft_strncmp(command[0],"export",6))
+	{
+		if(data->tokens_head->next != NULL
+			&& data->tokens_head->next->type == NORMAL)
+			change_env(data,command);
 		else
 			print_export(data);
 	}
-	else if(!strncmp(input,"env",3))
+	else if(!ft_strncmp(command[0],"unset",5))
+		exec_unset(data,command);
+	else if(!ft_strncmp(command[0],"cd",2))
+		exec_chdir(command);
+	else if(!strncmp(command[0],"env",3))
 		print_env(data);
-	else if(!strncmp(input,"cd",2))
-		exec_chdir(input);
-	else if(!strncmp(input,"echo",4))
-		exec_echo(data,input);
-	else if(!strncmp(input,"unset",5))
-		exec_unset(data,input);
-	else if(input[0] == 0)
-		free(input);
+	else if(!strncmp(command[0],"echo",4))
+		exec_echo(data,command);
 	else
 	{
 		pid = fork();
-		if(pid == (pid_t)0)
-		{
-			signal(SIGINT,child_process);
-			exec(input,data);
-			free(input);
-			exit(0);
-		}
+		if(pid == 0)
+			ft_execve(command,data);
 		else
 			waitpid(pid,NULL,0);
-		free(input);
 	}
 }

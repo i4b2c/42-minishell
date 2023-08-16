@@ -1,5 +1,6 @@
 #include "../include/minishell.h"
 
+//colocar na utils
 void add_list(t_data *data,t_varlst *temp_var)
 {
 	t_varlst *atual;
@@ -66,6 +67,7 @@ void change_env(t_data *data, char **input)
 	j = 0;
 	while(input[++j])
 	{
+		//melhorar o checker
 		if(check_input_env(input[j]))
 			ft_printf("minishell: `%s': not a valid identifier\n",input[j]);
 		else
