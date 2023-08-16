@@ -105,17 +105,17 @@ void init_signal(void);
 char *ft_mllstrcpy(char *str);
 void add_list(t_data *data,t_varlst *temp_var);
 
-void change_env(t_data *data, char *input);
-void exec_chdir(char *str);
+void change_env(t_data *data, char **input);
+void exec_chdir(char **str);
 
 int len_strings(char **str);
 
 char *ft_mllstrcpy(char *str);
 
-void exec_unset(t_data *data, char *input);
+void exec_unset(t_data *data, char **input);
 
 int search_envp(t_data *data, char *cmd);
-void exec_echo(t_data *data, char *input);
+void exec_echo(t_data *data, char **input);
 void check_exec(t_data *data, char *input);
 
 

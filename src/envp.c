@@ -57,25 +57,23 @@ bool check_input_env(char *str)
 	return true;
 }
 
-void change_env(t_data *data, char *input)
+void change_env(t_data *data, char **input)
 {
 	t_varlst *temp_var;
-	char **envp;
 	char **command;
 	int j;
 
-	envp = ft_split(input,' ');
 	j = 0;
-	while(envp[++j])
+	while(input[++j])
 	{
-		if(check_input_env(envp[j]))
-			ft_printf("minishell: `%s': not a valid identifier\n",envp[j]);
+		if(check_input_env(input[j]))
+			ft_printf("minishell: `%s': not a valid identifier\n",input[j]);
 		else
 		{
 			temp_var = malloc(sizeof(t_varlst));
 			if(!temp_var)
 				error(MALLOC,NULL);
-			command = ft_split(envp[j],'=');
+			command = ft_split(input[j],'=');
 			if(check_exist_env(data,command[0]))
 				change_exist_env(data,command);
 			else
@@ -89,5 +87,5 @@ void change_env(t_data *data, char *input)
 			free_strings(command);
 		}
 	}
-	free_strings(envp);
+	free_strings(input);
 }

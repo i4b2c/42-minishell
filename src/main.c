@@ -122,7 +122,7 @@ void exec_tokens(t_data *data)
 		temp = temp->next;
 		len++;
 	}
-	command = malloc(sizeof(char *) * len);
+	command = malloc(sizeof(char *) * (len + 1));
 	temp = data->tokens_head;
 	while(temp)
 	{
@@ -144,11 +144,32 @@ void exec_tokens(t_data *data)
 		temp = temp->next;
 	}
 	command[i] = NULL;
-	pid = fork();
-	if(pid == 0)
-		execve_tokens(command,data);
+	if(!ft_strncmp(command[0],"export",6))
+	{
+		if(data->tokens_head->next != NULL
+			&& data->tokens_head->next->type == NORMAL)
+			change_env(data,command);
+		else
+			print_export(data);
+	}
+	else if(!ft_strncmp(command[0],"unset",5))
+		exec_unset(data,command);
+	else if(!ft_strncmp(command[0],"cd",2))
+		exec_chdir(command);
+	else if(!strncmp(command[0],"env",3))
+		print_env(data);
+	else if(!strncmp(command[0],"echo",4))
+		exec_echo(data,command);
+	// else if(command[0][0])
+	// 	continue ;
 	else
-		waitpid(pid,NULL,0);
+	{
+		pid = fork();
+		if(pid == 0)
+			execve_tokens(command,data);
+		else
+			waitpid(pid,NULL,0);
+	}
 }
 void free_tokens(t_data *data)
 {
@@ -183,6 +204,7 @@ int main(int ac, char **av, char **envp)
 		dup2(temp_stdout,STDOUT_FILENO);
 		dup2(temp_stdin,STDIN_FILENO);
 		input = get_input();
+		add_history(input);
 		data->tokens_head = tokens_input(input);
 		if(!strncmp(data->tokens_head->command,"exit",4))
 		{
