@@ -17,6 +17,7 @@ int main(int ac, char **av, char **envp)
 	temp_stdin = dup(STDIN_FILENO);
 	while(1)
 	{
+		//reset();
 		dup2(temp_stdout,STDOUT_FILENO);
 		dup2(temp_stdin,STDIN_FILENO);
 		input = get_input();

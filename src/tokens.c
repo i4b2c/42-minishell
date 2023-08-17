@@ -46,7 +46,9 @@ t_tokens *tokens_input(char *input)
 		}
 		else
 		{
-			if(ft_strchr(command[i],'>'))
+			if(!ft_strncmp(command[i],">>",3))
+				type = RDR_AP_OUT;
+			else if(ft_strchr(command[i],'>'))
 				type = RDR_OUT;
 			else
 				type = RDR_IN;

@@ -1,11 +1,17 @@
 #include "../include/minishell.h"
 
-void change_stdout(char *str)
+int change_stdout(char *str, t_type type)
 {
 	int fd;
 
-	fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if(type == RDR_OUT)
+		fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	else if(type == RDR_AP_OUT)
+		fd = open(str, O_WRONLY | O_APPEND);
+	if(fd == -1)
+		fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	dup2(fd,STDOUT_FILENO);
+	return fd;
 }
 
 void change_stdin(char *str)

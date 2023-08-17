@@ -44,11 +44,14 @@ typedef enum e_type
 	NORMAL,
 	RDR_OUT,
 	RDR_IN,
+	RDR_AP_OUT,
+	RDR_RD_IN,
 	PIPE,
 }	t_type;
 
 typedef struct s_tokens
 {
+	int fd_out;
 	char *command;
 	t_type type;
 	struct s_tokens *next;
@@ -73,6 +76,7 @@ typedef struct s_data
 	char **envp;
 	// char **input;
 	// t_type type;
+	bool check_out;
 	t_tokens *tokens_head;
 	t_varlst *var_head;
 	t_statlst *stat_head;
@@ -119,7 +123,7 @@ void exec_echo(t_data *data, char **input);
 void check_exec(t_data *data, char *input);
 
 
-void change_stdout(char *str);
+int change_stdout(char *str,t_type type);
 void change_stdin(char *str);
 
 void ft_execve(char **command,t_data *data);

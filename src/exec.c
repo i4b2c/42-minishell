@@ -83,8 +83,9 @@ void exec_tokens(t_data *data)
 			command[i] = ft_mllstrcpy(temp->command);
 			i++;
 		}
-		else if(temp->type == RDR_OUT)
-			change_stdout(temp->command);
+		else if(temp->type == RDR_OUT
+			|| temp->type == RDR_AP_OUT)
+			temp->fd_out = change_stdout(temp->command,temp->type);
 		else if(temp->type == RDR_IN)
 			change_stdin(temp->command);
 		temp = temp->next;
@@ -110,7 +111,10 @@ void exec_tokens(t_data *data)
 	{
 		pid = fork();
 		if(pid == 0)
+		{
+			signal(SIGINT,child_process);
 			ft_execve(command,data);
+		}
 		else
 			waitpid(pid,NULL,0);
 	}
