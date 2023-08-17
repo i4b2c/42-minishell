@@ -70,5 +70,7 @@ t_data *get_data(int ac, char **av, char **envp)
 	temp_data->envp = envp;
 	temp_data->stat_head = get_stat(ac, av);
 	temp_data->var_head = get_var(envp);
+	temp_data->check_out = false;
+	temp_data->check_in = false;
 	return (temp_data);
 }

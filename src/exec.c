@@ -87,6 +87,56 @@ void read_stdin(char *str)
 	//lembrar de dar unlink no arq_temp.txt
 }
 
+int pipe_string(t_tokens *tokens)
+{
+	t_tokens *temp;
+	int pipe;
+
+	temp = tokens;
+	pipe = 0;
+	while(temp)
+	{
+		if(temp->type == PIPE)
+			pipe++;
+		temp = temp->next;
+	}
+	return pipe;
+}
+
+bool try_simple_exec(char **command,t_data *data)
+{
+	if(!ft_strncmp(command[0],"export",6))
+	{
+		if(data->tokens_head->next != NULL
+			&& data->tokens_head->next->type == NORMAL)
+			change_env(data,command);
+		else
+			print_export(data);
+		return true;
+	}
+	else if(!ft_strncmp(command[0],"unset",5))
+	{
+		exec_unset(data,command);
+		return true;
+	}
+	else if(!ft_strncmp(command[0],"cd",2))
+	{
+		exec_chdir(command);
+		return true;
+	}
+	else if(!strncmp(command[0],"env",3))
+	{
+		print_env(data);
+		return true;
+	}
+	else if(!strncmp(command[0],"echo",4))
+	{
+		exec_echo(data,command);
+		return true;
+	}
+	return false;
+}
+
 void exec_tokens(t_data *data)
 {
 	char **command;
@@ -94,6 +144,10 @@ void exec_tokens(t_data *data)
 	t_tokens *temp;
 	int i;
 	pid_t pid;
+	int fd;
+
+	int temp_i = dup(STDIN_FILENO);
+	int temp_o = dup(STDOUT_FILENO);
 
 	i = 0;
 	temp = data->tokens_head;
@@ -121,6 +175,57 @@ void exec_tokens(t_data *data)
 		{
 			data->check_in = true;
 			read_stdin(temp->command);
+		}
+		else if(temp->type == PIPE)
+		{
+//
+//
+			if(!data->check_out)
+			{
+				fd = open(TEMP_FILE_OUT, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+				dup2(fd,STDOUT_FILENO);
+			}
+
+			command[i] = NULL;
+			if(!ft_strncmp(command[0],"export",6))
+			{
+				if(data->tokens_head->next != NULL
+					&& data->tokens_head->next->type == NORMAL)
+					change_env(data,command);
+				else
+					print_export(data);
+			}
+			else if(!ft_strncmp(command[0],"unset",5))
+				exec_unset(data,command);
+			else if(!ft_strncmp(command[0],"cd",2))
+				exec_chdir(command);
+			else if(!strncmp(command[0],"env",3))
+				print_env(data);
+			else if(!strncmp(command[0],"echo",4))
+				exec_echo(data,command);
+			else
+			{
+				pid = fork();
+				if(pid == 0)
+				{
+					signal(SIGINT,child_process);
+					ft_execve(command,data);
+				}
+				else
+					waitpid(pid,NULL,0);
+			}
+			if(!data->check_out)
+			{
+				close(fd);
+				dup2(temp_o,STDOUT_FILENO);
+				fd = open(TEMP_FILE_OUT,O_RDONLY);
+				dup2(fd,STDIN_FILENO);
+			}
+			free_strings(command);
+			command = malloc(sizeof(char *) * (len + 1));
+			i = 0;
+//
+//
 		}
 		temp = temp->next;
 	}
@@ -152,4 +257,5 @@ void exec_tokens(t_data *data)
 		else
 			waitpid(pid,NULL,0);
 	}
+	unlink(TEMP_FILE_OUT);
 }

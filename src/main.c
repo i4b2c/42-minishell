@@ -26,8 +26,8 @@ int main(int ac, char **av, char **envp)
 		else
 		{
 			add_history(input);
-			data->tokens_head = tokens_input(input);
-			data->check_in = false;
+			data->tokens_head = tokens_input(input,data);
+			//data->check_in = false;
 			if(!strncmp(data->tokens_head->command,"exit",4))
 			{
 				free_data(&data);

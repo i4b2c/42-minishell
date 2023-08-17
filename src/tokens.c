@@ -25,7 +25,7 @@ void add_token(t_tokens **head, char *str,t_type type)
 	}
 }
 
-t_tokens *tokens_input(char *input)
+t_tokens *tokens_input(char *input,t_data *data)
 {
 	t_tokens *temp;
 	t_type type;
@@ -41,7 +41,13 @@ t_tokens *tokens_input(char *input)
 		if(!ft_strchr(command[i],'>')
 			&& !ft_strchr(command[i],'<'))
 		{
-			add_token(&temp,command[i],type);
+			if(ft_strchr(command[i],'|'))
+			{
+				add_token(&temp,command[i],PIPE);
+				type = NORMAL;
+			}
+			else
+				add_token(&temp,command[i],type);
 			if(type == RDR_RD_IN)
 				type = NORMAL;
 			i++;
@@ -54,8 +60,14 @@ t_tokens *tokens_input(char *input)
 				type = RDR_RD_IN;
 			else if(ft_strchr(command[i],'>'))
 				type = RDR_OUT;
-			else
+			else if(ft_strchr(command[i],'<'))
 				type = RDR_IN;
+			if(type == RDR_AP_OUT
+				|| type == RDR_OUT)
+				data->check_out = true;
+			if(type == RDR_RD_IN
+			|| type == RDR_IN)
+				data->check_in = true;
 			i++;
 		}
 	}

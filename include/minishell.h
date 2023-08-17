@@ -37,9 +37,11 @@
 #define ARGS "Invalid argument: ./minishell\n"
 #define INPUT "minishell: syntax error near unexpected token "
 #define INPUT_NEW_LINE "minishell: syntax error near unexpected token `newline'\n"
+#define COMMAND_NOT_FOUND "minishell : command not found\n"
 #define SYNTAX_ENVP ""
 
 #define TEMP_FILE ".file_temp.txt"
+#define TEMP_FILE_OUT ".file_out_temp.txt"
 
 typedef enum e_type
 {
@@ -76,8 +78,6 @@ typedef struct s_varlst
 typedef struct s_data
 {
 	char **envp;
-	// char **input;
-	// t_type type;
 	bool check_out;
 	bool check_in;
 	t_tokens *tokens_head;
@@ -132,7 +132,7 @@ void change_stdin(char *str);
 void ft_execve(char **command,t_data *data);
 void exec_tokens(t_data *data);
 
-t_tokens *tokens_input(char *input);
+t_tokens *tokens_input(char *input,t_data *data);
 void add_token(t_tokens **head,char *str,t_type type);
 
 void free_tokens(t_data *data);
