@@ -58,6 +58,35 @@ void ft_execve(char **command,t_data *data)
 	exit(0);
 }
 
+
+void read_stdin(char *str)
+{
+	char *input;
+	int fd;
+
+	fd = open("arq_temp.txt", O_WRONLY | O_CREAT | O_TRUNC , 0666);
+	if(fd == -1)
+		exit(0);
+	while(1)
+	{
+		input = readline("> ");
+		if(!ft_strncmp(input,str,ft_strlen(str)))
+		{
+			break;
+		}
+		else
+		{
+			write(fd,input,ft_strlen(input));
+			write(fd,"\n",1);
+		}
+		free(input);
+	}
+	close(fd);
+	fd = open("arq_temp.txt",O_RDONLY);
+	dup2(fd,STDIN_FILENO);
+	//lembrar de dar unlink no arq_temp.txt
+}
+
 void exec_tokens(t_data *data)
 {
 	char **command;
@@ -88,6 +117,8 @@ void exec_tokens(t_data *data)
 			temp->fd_out = change_stdout(temp->command,temp->type);
 		else if(temp->type == RDR_IN)
 			change_stdin(temp->command);
+		else if(temp->type == RDR_RD_IN)
+			read_stdin(temp->command);
 		temp = temp->next;
 	}
 	command[i] = NULL;

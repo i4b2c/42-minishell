@@ -42,12 +42,16 @@ t_tokens *tokens_input(char *input)
 			&& !ft_strchr(command[i],'<'))
 		{
 			add_token(&temp,command[i],type);
+			if(type == RDR_RD_IN)
+				type = NORMAL;
 			i++;
 		}
 		else
 		{
 			if(!ft_strncmp(command[i],">>",3))
 				type = RDR_AP_OUT;
+			else if(!ft_strncmp(command[i],"<<",3))
+				type = RDR_RD_IN;
 			else if(ft_strchr(command[i],'>'))
 				type = RDR_OUT;
 			else
