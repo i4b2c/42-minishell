@@ -64,7 +64,7 @@ void read_stdin(char *str)
 	char *input;
 	int fd;
 
-	fd = open("arq_temp.txt", O_WRONLY | O_CREAT | O_TRUNC , 0666);
+	fd = open(TEMP_FILE, O_WRONLY | O_CREAT | O_TRUNC , 0666);
 	if(fd == -1)
 		exit(0);
 	while(1)
@@ -82,7 +82,7 @@ void read_stdin(char *str)
 		free(input);
 	}
 	close(fd);
-	fd = open("arq_temp.txt",O_RDONLY);
+	fd = open(TEMP_FILE,O_RDONLY);
 	dup2(fd,STDIN_FILENO);
 	//lembrar de dar unlink no arq_temp.txt
 }
@@ -118,7 +118,10 @@ void exec_tokens(t_data *data)
 		else if(temp->type == RDR_IN)
 			change_stdin(temp->command);
 		else if(temp->type == RDR_RD_IN)
+		{
+			data->check_in = true;
 			read_stdin(temp->command);
+		}
 		temp = temp->next;
 	}
 	command[i] = NULL;

@@ -27,12 +27,14 @@ int main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 			data->tokens_head = tokens_input(input);
+			data->check_in = false;
 			if(!strncmp(data->tokens_head->command,"exit",4))
 			{
 				free_data(&data);
 				break;
 			}
 			exec_tokens(data);
+			unlink(TEMP_FILE);
 			free_tokens(data);
 		}
 	}

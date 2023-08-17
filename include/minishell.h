@@ -39,6 +39,8 @@
 #define INPUT_NEW_LINE "minishell: syntax error near unexpected token `newline'\n"
 #define SYNTAX_ENVP ""
 
+#define TEMP_FILE ".file_temp.txt"
+
 typedef enum e_type
 {
 	NORMAL,
@@ -77,6 +79,7 @@ typedef struct s_data
 	// char **input;
 	// t_type type;
 	bool check_out;
+	bool check_in;
 	t_tokens *tokens_head;
 	t_varlst *var_head;
 	t_statlst *stat_head;
