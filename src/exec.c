@@ -208,6 +208,7 @@ void exec_tokens(t_data *data)
 				pid = fork();
 				if(pid == 0)
 				{
+					//print_string(command);
 					signal(SIGINT,child_process);
 					ft_execve(command,data);
 				}
