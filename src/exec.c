@@ -169,9 +169,15 @@ void exec_tokens(t_data *data)
 		}
 		else if(temp->type == RDR_OUT
 			|| temp->type == RDR_AP_OUT)
-			temp->fd_out = change_stdout(temp->command,temp->type);
+			{
+				data->check_out = true;
+				temp->fd_out = change_stdout(temp->command,temp->type);
+			}
 		else if(temp->type == RDR_IN)
+		{
+			data->check_in = true;
 			change_stdin(temp->command);
+		}
 		else if(temp->type == RDR_RD_IN)
 		{
 			data->check_in = true;
@@ -229,7 +235,8 @@ void exec_tokens(t_data *data)
 		temp = temp->next;
 	}
 	command[i] = NULL;
-	dup2(temp_o,STDOUT_FILENO);
+	if(!data->check_out)
+		dup2(temp_o,STDOUT_FILENO);
 	if(!ft_strncmp(command[0],"export",6))
 	{
 		if(data->tokens_head->next != NULL

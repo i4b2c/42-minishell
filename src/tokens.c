@@ -48,8 +48,7 @@ t_tokens *tokens_input(char *input,t_data *data)
 			}
 			else
 				add_token(&temp,command[i],type);
-			if(type == RDR_RD_IN)
-				type = NORMAL;
+			type = NORMAL;
 			i++;
 		}
 		else
@@ -62,12 +61,12 @@ t_tokens *tokens_input(char *input,t_data *data)
 				type = RDR_OUT;
 			else if(ft_strchr(command[i],'<'))
 				type = RDR_IN;
-			if(type == RDR_AP_OUT
-				|| type == RDR_OUT)
-				data->check_out = true;
-			if(type == RDR_RD_IN
-			|| type == RDR_IN)
-				data->check_in = true;
+			// if(type == RDR_AP_OUT
+			// 	|| type == RDR_OUT)
+			// 	data->check_out = true;
+			// if(type == RDR_RD_IN
+			// || type == RDR_IN)
+			// 	data->check_in = true;
 			i++;
 		}
 	}
