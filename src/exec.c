@@ -59,21 +59,22 @@ void ft_execve(char **command,t_data *data)
 }
 
 
-void read_stdin(char *str)
+void read_stdin(char *str,int fd_temp)
 {
 	char *input;
 	int fd;
+	int check_unlink;
 
+	//check_unlink = unlink(TEMP_FILE);
 	fd = open(TEMP_FILE, O_WRONLY | O_CREAT | O_TRUNC , 0666);
+	dup2(fd_temp,STDIN_FILENO);
 	if(fd == -1)
 		exit(0);
 	while(1)
 	{
 		input = readline("> ");
 		if(!ft_strncmp(input,str,ft_strlen(str)))
-		{
 			break;
-		}
 		else
 		{
 			write(fd,input,ft_strlen(input));
@@ -82,7 +83,7 @@ void read_stdin(char *str)
 		free(input);
 	}
 	close(fd);
-	fd = open(TEMP_FILE,O_RDONLY);
+	fd = open(TEMP_FILE , O_RDONLY);
 	dup2(fd,STDIN_FILENO);
 	//lembrar de dar unlink no arq_temp.txt
 }
@@ -174,7 +175,7 @@ void exec_tokens(t_data *data)
 		else if(temp->type == RDR_RD_IN)
 		{
 			data->check_in = true;
-			read_stdin(temp->command);
+			read_stdin(temp->command,temp_i);
 		}
 		else if(temp->type == PIPE)
 		{
@@ -208,7 +209,6 @@ void exec_tokens(t_data *data)
 				pid = fork();
 				if(pid == 0)
 				{
-					//print_string(command);
 					signal(SIGINT,child_process);
 					ft_execve(command,data);
 				}
@@ -233,10 +233,6 @@ void exec_tokens(t_data *data)
 		temp = temp->next;
 	}
 	command[i] = NULL;
-	// if(!data->check_out)
-	// 	dup2(STDOUT_FILENO,temp_o);
-	// if(!data->check_in)
-	// 	dup2(temp_i,STDIN_FILENO);
 	dup2(temp_o,STDOUT_FILENO);
 	if(!ft_strncmp(command[0],"export",6))
 	{
