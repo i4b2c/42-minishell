@@ -1,21 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/11 22:30:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/08/11 22:30:48 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include "../libft/src/libft.h"
-//#include "../.pipex/pipex.h"
-
+# include "../libft/src/libft.h"
 # include <string.h>
 # include <sys/wait.h>
 # include <stdio.h>
@@ -31,17 +17,16 @@
 # include <limits.h>
 # include <stdbool.h>
 # include <sys/errno.h>
-// #include <sys/kern_memorystatus.h>
 
-#define MALLOC "minishell: Error Memory Allocation\n"
-#define ARGS "Invalid argument: ./minishell\n"
-#define INPUT "minishell: syntax error near unexpected token "
-#define INPUT_NEW_LINE "minishell: syntax error near unexpected token `newline'\n"
-#define COMMAND_NOT_FOUND "minishell : command not found\n"
-#define SYNTAX_ENVP ""
+# define MALLOC "minishell: Error Memory Allocation\n"
+# define ARGS "Invalid argument: ./minishell\n"
+# define INPUT "minishell: syntax error near unexpected token "
+# define INPUT_NEW_LINE "minishell: unexpected token `newline'\n"
+# define COMMAND_NOT_FOUND "minishell : command not found\n"
+# define SYNTAX_ENVP ""
 
-#define TEMP_FILE ".file_temp.txt"
-#define TEMP_FILE_OUT ".file_out_temp.txt"
+# define TEMP_FILE ".file_temp.txt"
+# define TEMP_FILE_OUT ".file_out_temp.txt"
 
 typedef enum e_type
 {
@@ -55,86 +40,138 @@ typedef enum e_type
 
 typedef struct s_tokens
 {
-	int fd_out;
-	char *command;
-	t_type type;
-	struct s_tokens *next;
-}	t_tokens;
+	int				fd_out;
+	char			*command;
+	t_type			type;
+	struct s_tokens	*next;
+}				t_tokens;
 
 typedef struct s_statlst
 {
-	int ac;
-	char **av;
-	struct s_statlst *next;
-}	t_statlst;
+	int					ac;
+	char				**av;
+	struct s_statlst	*next;
+}				t_statlst;
 
 typedef struct s_varlst
 {
-	char *var_name;
-	char *var_value;
-	struct s_varlst *next;
-}	t_varlst;
+	char			*var_name;
+	char			*var_value;
+	struct s_varlst	*next;
+}				t_varlst;
 
 typedef struct s_data
 {
-	char **envp;
-	bool check_out;
-	bool check_in;
-	t_tokens *tokens_head;
-	t_varlst *var_head;
-	t_statlst *stat_head;
-}	t_data;
+	char		**envp;
+	bool		check_out;
+	bool		check_in;
+	t_tokens	*tokens_head;
+	t_varlst	*var_head;
+	t_statlst	*stat_head;
+}				t_data;
 
-void print_env(t_data *data);
-int get_index_env(char *str);
-void add_env(t_data *data,char *var);
-bool check_input_env(char *var);
+/*************\
+|**--CHDIR--**|
+\*************/
+void		exec_chdir(char **i);
 
-t_data *get_data(int ac, char **av, char **envp);
-int ft_strlen(char *str);
-void error(char *str, char *str_extra);
+/************\
+|**--DATA--**|
+\************/
+t_statlst	*get_stat(int ac, char **av);
+t_varlst	*get_var(char **envp);
+t_data		*get_data(int ac, char **av, char **envp);
 
-char *get_input(void);
+/************\
+|**--ECHO--**|
+\************/
+int			search_envp(t_data *data, char *cmd);
+void		exec_echo(t_data *data, char **input);
 
-void free_data(t_data **data);
-void free_strings(char **str);
+/************\
+|**--ENVP--**|
+\************/
+bool		check_exist_env(t_data *data, char *input);
+void		change_exist_env(t_data *data, char **cmd);
+bool		check_input_env(char *str);
+void		change_env(t_data *data, char **input);
 
-void exec(char *command,t_data *data);
+/*************\
+|**--ERROR--**|
+\*************/
+void		error(char *str, char *str_extra);
 
-void print_export(t_data *data);
+/************\
+|**--EXEC--**|
+\************/
+char		*check_command(char *command, char **path);
+char		*ft_getenv(const char *str, t_data *data);
+void		ft_execve(char **command, t_data *data);
+void		read_stdin(char *str, int fd);
+int			pipe_string(t_tokens *token);
+bool		try_simple_exec(char **command, t_data *data);
+void		exec_tokens(t_data *data);
 
-void print_string(char **str);
+/**************\
+|**--EXPORT--**|
+\**************/
+int			num_data_env(t_data *data);
+char		*copy_var(t_varlst *temp);
+char		**replicate_string(t_data *data);
+void		sort_string(char **str);
+void		print_export(t_data *data);
 
-void child_process(int sig);
-void dimiss_signal(int sig);
-void init_signal(void);
+/************\
+|**--FREE--**|
+\************/
+void		free_strings(char **str);
+void		free_data(t_data **data);
+void		free_tokens(t_data *data);
 
-char *ft_mllstrcpy(char *str);
-void add_list(t_data *data,t_varlst *temp_var);
+/*************\
+|**--INPUT--**|
+\*************/
+char		*get_input(void);
 
-void change_env(t_data *data, char **input);
-void exec_chdir(char **str);
+/****************\
+|**--REDIRECT--**|
+\****************/
+int			change_stdout(char *str, t_type type);
+void		change_stdin(char *str);
 
-int len_strings(char **str);
+/**************\
+|**--SIGNAL--**|
+\**************/
+void		child_process(int sig);
+void		dismiss_signal(int sig);
+void		init_signal(void);
 
-char *ft_mllstrcpy(char *str);
+/**************\
+|**--TOKENS--**|
+\**************/
+void		add_token(t_tokens **h, char *s, t_type t);
+t_tokens	*tokens_input(char *i, t_data *d);
 
-void exec_unset(t_data *data, char **input);
+/*************\
+|**--UNSET--**|
+\*************/
+void		exec_unset(t_data *data, char **input);
 
-int search_envp(t_data *data, char *cmd);
-void exec_echo(t_data *data, char **input);
-void check_exec(t_data *data, char *input);
+/*****************\
+|**--UTIL ENVP--**|
+\*****************/
+void		print_env(t_data *data);
 
+/*******************\
+|**--UTIL STRING--**|
+\*******************/
+int			len_strings(char **cmd);
+void		print_string(char **str);
 
-int change_stdout(char *str,t_type type);
-void change_stdin(char *str);
-
-void ft_execve(char **command,t_data *data);
-void exec_tokens(t_data *data);
-
-t_tokens *tokens_input(char *input,t_data *data);
-void add_token(t_tokens **head,char *str,t_type type);
-
-void free_tokens(t_data *data);
+/************\
+|**--UTIL--**|
+\************/
+char		*ft_mllstrcpy(char *str);
+void		add_list(t_data *data, t_varlst *temp);
 
 #endif

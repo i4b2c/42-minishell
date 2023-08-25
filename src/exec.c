@@ -179,8 +179,6 @@ void exec_tokens(t_data *data)
 		}
 		else if(temp->type == PIPE)
 		{
-//
-//
 			if(!data->check_out)
 			{
 				fd = open(TEMP_FILE_OUT, O_WRONLY | O_CREAT | O_TRUNC, 0666);
@@ -227,8 +225,6 @@ void exec_tokens(t_data *data)
 			free_strings(command);
 			command = malloc(sizeof(char *) * (len + 1));
 			i = 0;
-//
-//
 		}
 		temp = temp->next;
 	}

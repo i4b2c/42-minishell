@@ -1,22 +1,5 @@
 #include "../include/minishell.h"
 
-//colocar na utils
-void add_list(t_data *data,t_varlst *temp_var)
-{
-	t_varlst *atual;
-
-	atual = NULL;
-	if(data->var_head == NULL)
-		data->var_head = temp_var;
-	else
-	{
-		atual = data->var_head;
-		while(atual->next != NULL)
-			atual = atual->next;
-		atual->next = temp_var;
-	}
-}
-
 bool check_exist_env(t_data *data, char *input)
 {
 	t_varlst *temp_var;
