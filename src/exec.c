@@ -222,6 +222,8 @@ void exec_tokens(t_data *data)
 				fd = open(TEMP_FILE_OUT,O_RDONLY);
 				dup2(fd,STDIN_FILENO);
 			}
+			data->check_in = false;
+			data->check_out = false;
 			free_strings(command);
 			command = malloc(sizeof(char *) * (len + 1));
 			i = 0;
@@ -231,6 +233,11 @@ void exec_tokens(t_data *data)
 		temp = temp->next;
 	}
 	command[i] = NULL;
+	// if(!data->check_out)
+	// 	dup2(STDOUT_FILENO,temp_o);
+	// if(!data->check_in)
+	// 	dup2(temp_i,STDIN_FILENO);
+	dup2(temp_o,STDOUT_FILENO);
 	if(!ft_strncmp(command[0],"export",6))
 	{
 		if(data->tokens_head->next != NULL
