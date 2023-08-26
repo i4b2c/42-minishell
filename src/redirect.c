@@ -5,7 +5,7 @@ int change_stdout(char *str, t_type type)
 	int fd;
 
 	if(type == RDR_OUT)
-		fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		fd = open(str, O_WRONLY | O_CREAT , 0666);
 	else if(type == RDR_AP_OUT)
 		fd = open(str, O_WRONLY | O_APPEND);
 	if(fd == -1)

@@ -185,11 +185,9 @@ void exec_tokens(t_data *data)
 		}
 		else if(temp->type == PIPE)
 		{
+			fd = open(TEMP_FILE_OUT, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 			if(!data->check_out)
-			{
-				fd = open(TEMP_FILE_OUT, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 				dup2(fd,STDOUT_FILENO);
-			}
 
 			command[i] = NULL;
 			if(!ft_strncmp(command[0],"export",6))
@@ -237,6 +235,8 @@ void exec_tokens(t_data *data)
 	command[i] = NULL;
 	if(!data->check_out)
 		dup2(temp_o,STDOUT_FILENO);
+	if(!data->check_in)
+		change_stdin(TEMP_FILE);
 	if(!ft_strncmp(command[0],"export",6))
 	{
 		if(data->tokens_head->next != NULL
@@ -265,4 +265,5 @@ void exec_tokens(t_data *data)
 			waitpid(pid,NULL,0);
 	}
 	unlink(TEMP_FILE_OUT);
+	unlink(TEMP_FILE);
 }
