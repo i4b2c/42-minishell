@@ -185,10 +185,8 @@ void exec_tokens(t_data *data)
 		}
 		else if(temp->type == PIPE)
 		{
-			fd = open(TEMP_FILE_OUT, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 			if(!data->check_out)
-				dup2(fd,STDOUT_FILENO);
-
+				change_stdout(TEMP_FILE_OUT,RDR_OUT);
 			command[i] = NULL;
 			if(!ft_strncmp(command[0],"export",6))
 			{
@@ -217,9 +215,9 @@ void exec_tokens(t_data *data)
 				else
 					waitpid(pid,NULL,0);
 			}
+			dup2(temp_i,STDIN_FILENO);
 			if(!data->check_out)
 			{
-				close(fd);
 				dup2(temp_o,STDOUT_FILENO);
 				fd = open(TEMP_FILE_OUT,O_RDONLY);
 				dup2(fd,STDIN_FILENO);
@@ -233,10 +231,22 @@ void exec_tokens(t_data *data)
 		temp = temp->next;
 	}
 	command[i] = NULL;
+	//if(data->check_in)
 	if(!data->check_out)
 		dup2(temp_o,STDOUT_FILENO);
 	if(!data->check_in)
-		change_stdin(TEMP_FILE);
+	{
+		dup2(temp_i,STDIN_FILENO);
+		int fd_teste = open(TEMP_FILE_OUT,O_RDONLY);
+		if(fd_teste == -1)
+			fd_teste = open(TEMP_FILE_OUT, O_CREAT | O_RDONLY);
+		dup2(fd_teste,STDIN_FILENO);
+		// dup2(temp_i,STDIN_FILENO);
+		// open(".teste_file",O_CREAT | O_TRUNC , 0666);
+		// int fd_teste = open(".teste_file", O_RDONLY);
+		// dup2(fd_teste,STDIN_FILENO);
+	}
+	//change_stdin(TEMP_FILE_OUT);
 	if(!ft_strncmp(command[0],"export",6))
 	{
 		if(data->tokens_head->next != NULL
