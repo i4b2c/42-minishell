@@ -27,11 +27,11 @@ char *ft_getenv(const char *str,t_data *data)
 	temp_var = data->var_head;
 	while(temp_var)
 	{
-		if(!strncmp(temp_var->var_name,str,4))
+		if(!strncmp(temp_var->var_name,str,ft_strlen((char *)str)))
 			return (ft_mllstrcpy(temp_var->var_value));
 		temp_var = temp_var->next;
 	}
-	return NULL;
+	return ft_calloc(1,1);
 }
 
 void ft_execve(char **command,t_data *data)
@@ -64,28 +64,38 @@ void read_stdin(char *str,int fd_temp)
 	char *input;
 	int fd;
 	int check_unlink;
+	pid_t pid;
 
 	//check_unlink = unlink(TEMP_FILE);
 	fd = open(TEMP_FILE, O_WRONLY | O_CREAT | O_TRUNC , 0666);
 	dup2(fd_temp,STDIN_FILENO);
 	if(fd == -1)
 		exit(0);
-	while(1)
+	pid = fork();
+	if(pid == (pid_t)0)
 	{
-		input = readline("> ");
-		if(!ft_strncmp(input,str,ft_strlen(str)))
-			break;
-		else
+		signal(SIGINT,child_process);
+		while(1)
 		{
-			write(fd,input,ft_strlen(input));
-			write(fd,"\n",1);
+			input = readline("> ");
+			if(!ft_strncmp(input,str,ft_strlen(str)))
+				break;
+			else
+			{
+				write(fd,input,ft_strlen(input));
+				write(fd,"\n",1);
+			}
+			free(input);
 		}
-		free(input);
+		//lembrar de dar unlink no arq_temp.txt
 	}
-	close(fd);
-	fd = open(TEMP_FILE , O_RDONLY);
-	dup2(fd,STDIN_FILENO);
-	//lembrar de dar unlink no arq_temp.txt
+	else
+	{
+		close(fd);
+		fd = open(TEMP_FILE , O_RDONLY);
+		dup2(fd,STDIN_FILENO);
+		waitpid(pid,NULL,0);
+	}
 }
 
 int pipe_string(t_tokens *tokens)
@@ -138,6 +148,39 @@ bool try_simple_exec(char **command,t_data *data)
 	return false;
 }
 
+void choose_exec(char **command, t_data *data)
+{
+	pid_t pid;
+
+	if(!ft_strncmp(command[0],"export",6))
+	{
+		if(data->tokens_head->next != NULL
+			&& data->tokens_head->next->type == NORMAL)
+			change_env(data,command);
+		else
+			print_export(data);
+	}
+	else if(!ft_strncmp(command[0],"unset",5))
+		exec_unset(data,command);
+	else if(!ft_strncmp(command[0],"cd",2))
+		exec_chdir(command);
+	else if(!strncmp(command[0],"env",3))
+		print_env(data);
+	//else if(!strncmp(command[0],"echo",4))
+	//	exec_echo(data,command);
+	else
+	{
+		pid = fork();
+		if(pid == 0)
+		{
+			signal(SIGINT,child_process);
+			ft_execve(command,data);
+		}
+		else
+			waitpid(pid,NULL,0);
+	}
+}
+
 void exec_tokens(t_data *data)
 {
 	char **command;
@@ -188,33 +231,7 @@ void exec_tokens(t_data *data)
 			if(!data->check_out)
 				change_stdout(TEMP_FILE_OUT,RDR_OUT);
 			command[i] = NULL;
-			if(!ft_strncmp(command[0],"export",6))
-			{
-				if(data->tokens_head->next != NULL
-					&& data->tokens_head->next->type == NORMAL)
-					change_env(data,command);
-				else
-					print_export(data);
-			}
-			else if(!ft_strncmp(command[0],"unset",5))
-				exec_unset(data,command);
-			else if(!ft_strncmp(command[0],"cd",2))
-				exec_chdir(command);
-			else if(!strncmp(command[0],"env",3))
-				print_env(data);
-			else if(!strncmp(command[0],"echo",4))
-				exec_echo(data,command);
-			else
-			{
-				pid = fork();
-				if(pid == 0)
-				{
-					signal(SIGINT,child_process);
-					ft_execve(command,data);
-				}
-				else
-					waitpid(pid,NULL,0);
-			}
+			choose_exec(command,data);
 			dup2(temp_i,STDIN_FILENO);
 			if(!data->check_out)
 			{
@@ -231,7 +248,6 @@ void exec_tokens(t_data *data)
 		temp = temp->next;
 	}
 	command[i] = NULL;
-	//if(data->check_in)
 	if(!data->check_out)
 		dup2(temp_o,STDOUT_FILENO);
 	if(!data->check_in)
@@ -241,39 +257,8 @@ void exec_tokens(t_data *data)
 		if(fd_teste == -1)
 			fd_teste = open(TEMP_FILE_OUT, O_CREAT | O_RDONLY);
 		dup2(fd_teste,STDIN_FILENO);
-		// dup2(temp_i,STDIN_FILENO);
-		// open(".teste_file",O_CREAT | O_TRUNC , 0666);
-		// int fd_teste = open(".teste_file", O_RDONLY);
-		// dup2(fd_teste,STDIN_FILENO);
 	}
-	//change_stdin(TEMP_FILE_OUT);
-	if(!ft_strncmp(command[0],"export",6))
-	{
-		if(data->tokens_head->next != NULL
-			&& data->tokens_head->next->type == NORMAL)
-			change_env(data,command);
-		else
-			print_export(data);
-	}
-	else if(!ft_strncmp(command[0],"unset",5))
-		exec_unset(data,command);
-	else if(!ft_strncmp(command[0],"cd",2))
-		exec_chdir(command);
-	else if(!strncmp(command[0],"env",3))
-		print_env(data);
-	else if(!strncmp(command[0],"echo",4))
-		exec_echo(data,command);
-	else
-	{
-		pid = fork();
-		if(pid == 0)
-		{
-			signal(SIGINT,child_process);
-			ft_execve(command,data);
-		}
-		else
-			waitpid(pid,NULL,0);
-	}
+	choose_exec(command,data);
 	unlink(TEMP_FILE_OUT);
 	unlink(TEMP_FILE);
 }

@@ -2,9 +2,9 @@
 
 int change_stdout(char *str, t_type type)
 {
-	int fd;
+	int	fd;
 
-	if(type == RDR_OUT)
+	if (type == RDR_OUT)
 	{
 		unlink(str);
 		fd = open(str, O_WRONLY | O_CREAT , 0666);

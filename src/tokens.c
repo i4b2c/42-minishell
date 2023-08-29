@@ -30,6 +30,7 @@ t_tokens *tokens_input(char *input,t_data *data)
 	t_tokens *temp;
 	t_type type;
 	char **command;
+	char **split_pipe;
 	int i;
 
 	i = 0;
@@ -43,8 +44,16 @@ t_tokens *tokens_input(char *input,t_data *data)
 		{
 			if(ft_strchr(command[i],'|'))
 			{
-				add_token(&temp,command[i],PIPE);
+				add_token(&temp,"|",PIPE);
 				type = NORMAL;
+			}
+			else if(ft_strchr(command[i],'$'))
+			{
+				char *new_temp;
+
+				new_temp = ft_getenv(command[i]+1,data);
+				add_token(&temp,new_temp,type);
+				free(new_temp);
 			}
 			else
 				add_token(&temp,command[i],type);
@@ -61,12 +70,6 @@ t_tokens *tokens_input(char *input,t_data *data)
 				type = RDR_OUT;
 			else if(ft_strchr(command[i],'<'))
 				type = RDR_IN;
-			// if(type == RDR_AP_OUT
-			// 	|| type == RDR_OUT)
-			// 	data->check_out = true;
-			// if(type == RDR_RD_IN
-			// || type == RDR_IN)
-			// 	data->check_in = true;
 			i++;
 		}
 	}
