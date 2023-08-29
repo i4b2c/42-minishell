@@ -190,6 +190,7 @@ void exec_tokens(t_data *data)
 	int i;
 	pid_t pid;
 	int fd;
+	bool check_pipe;
 
 	int temp_i = dup(STDIN_FILENO);
 	int temp_o = dup(STDOUT_FILENO);
@@ -197,6 +198,7 @@ void exec_tokens(t_data *data)
 	i = 0;
 	temp = data->tokens_head;
 	len = 0;
+	check_pipe = false;
 	while(temp)
 	{
 		temp = temp->next;
@@ -229,6 +231,7 @@ void exec_tokens(t_data *data)
 		}
 		else if(temp->type == PIPE)
 		{
+			check_pipe = true;
 			if(!data->check_out)
 				change_stdout(TEMP_FILE_OUT,RDR_OUT);
 			command[i] = NULL;
@@ -251,7 +254,7 @@ void exec_tokens(t_data *data)
 	command[i] = NULL;
 	if(!data->check_out)
 		dup2(temp_o,STDOUT_FILENO);
-	if(!data->check_in)
+	if(!data->check_in && check_pipe)
 	{
 		dup2(temp_i,STDIN_FILENO);
 		int fd_teste = open(TEMP_FILE_OUT,O_RDONLY);
