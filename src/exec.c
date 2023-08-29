@@ -87,6 +87,7 @@ void read_stdin(char *str,int fd_temp)
 			}
 			free(input);
 		}
+		exit(0);
 		//lembrar de dar unlink no arq_temp.txt
 	}
 	else
