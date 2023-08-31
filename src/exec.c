@@ -38,6 +38,7 @@ void ft_execve(char **command,t_data *data)
 {
 	char *path;
 	char *check;
+	char **check_split;
 
 	path = ft_getenv("PATH",data);
 	if(!path)
@@ -47,15 +48,16 @@ void ft_execve(char **command,t_data *data)
 		exit(0);
 	}
 	int i = 0;
-	check = check_command(command[0],ft_split(path,':'));
+	check_split = ft_split(path,':');
+	check = check_command(command[0],check_split);
 	if(check)
 		execve(check,command,NULL);
 	if(!access(command[0],X_OK))
 		execve(command[0],command,NULL);
 	dup2(STDOUT_FILENO,1);
 	write(2,"minishell : command not found\n",30);
-	free(command);
-	exit(0);
+	free_strings(command);
+	exit(-1);
 }
 
 
