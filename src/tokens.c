@@ -25,16 +25,16 @@ void add_token(t_tokens **head, char *str,t_type type)
 	}
 }
 
-t_tokens *tokens_input(char *input,t_data *data)
+t_tokens *tokens_input(char **command,t_data *data)
 {
 	t_tokens *temp;
 	t_type type;
-	char **command;
+	//char **command;
 	char **split_pipe;
 	int i;
 
 	i = 0;
-	command = ft_split(input,' ');
+	// command = ft_split(input,' ');
 	temp = NULL;
 	type = NORMAL;
 	while(command[i])
@@ -47,11 +47,11 @@ t_tokens *tokens_input(char *input,t_data *data)
 				add_token(&temp,"|",PIPE);
 				type = NORMAL;
 			}
-			else if(ft_strchr(command[i],'$'))
+			else if(ft_strchr(command[i],'$') && command[i][0] != '\'')
 			{
 				char *new_temp;
 
-				new_temp = ft_getenv(command[i]+1,data);
+				new_temp = ft_getenv(command[i],data);
 				add_token(&temp,new_temp,type);
 				free(new_temp);
 			}
@@ -74,6 +74,6 @@ t_tokens *tokens_input(char *input,t_data *data)
 		}
 	}
 	free_strings(command);
-	free(input);
+	//free(input);
 	return temp;
 }

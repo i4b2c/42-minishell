@@ -23,6 +23,7 @@ char	*check_command(char *command, char **path)
 char *ft_getenv(const char *str,t_data *data)
 {
 	t_varlst *temp_var;
+	// char *temp;
 
 	temp_var = data->var_head;
 	while(temp_var)
@@ -184,6 +185,32 @@ void choose_exec(char **command, t_data *data)
 	}
 }
 
+int is_quote(char c) {
+    return (c == '"' || c == '\'');
+}
+
+char *cut_quotes(char *input,char quote)
+{
+	char *temp;
+	int i;
+	int i_temp;
+
+	i = 0;
+	i_temp = 0;
+	temp = malloc(sizeof(char) * ft_strlen(input));
+	while(input[i])
+	{
+		if(input[i] != quote)
+		{
+			temp[i_temp] = input[i];
+			i_temp++;
+		}
+		i++;
+	}
+	temp[i_temp] = 0;
+	return temp;
+}
+
 void exec_tokens(t_data *data)
 {
 	char **command;
@@ -212,7 +239,10 @@ void exec_tokens(t_data *data)
 	{
 		if(temp->type == NORMAL)
 		{
-			command[i] = ft_mllstrcpy(temp->command);
+			if(is_quote(temp->command[0]))
+				command[i] = cut_quotes(temp->command,temp->command[0]);
+			else
+				command[i] = ft_mllstrcpy(temp->command);
 			i++;
 		}
 		else if(temp->type == RDR_OUT

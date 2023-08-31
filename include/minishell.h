@@ -150,7 +150,7 @@ void		init_signal(void);
 |**--TOKENS--**|
 \**************/
 void		add_token(t_tokens **h, char *s, t_type t);
-t_tokens	*tokens_input(char *i, t_data *d);
+t_tokens	*tokens_input(char **i, t_data *d);
 
 /*************\
 |**--UNSET--**|
@@ -173,5 +173,7 @@ void		print_string(char **str);
 \************/
 char		*ft_mllstrcpy(char *str);
 void		add_list(t_data *data, t_varlst *temp);
+
+int is_quote(char c);
 
 #endif
