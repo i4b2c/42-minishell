@@ -239,10 +239,7 @@ void exec_tokens(t_data *data)
 	{
 		if(temp->type == NORMAL)
 		{
-			if(is_quote(temp->command[0]))
-				command[i] = cut_quotes(temp->command,temp->command[0]);
-			else
-				command[i] = ft_mllstrcpy(temp->command);
+			command[i] = ft_mllstrcpy(temp->command);
 			i++;
 		}
 		else if(temp->type == RDR_OUT

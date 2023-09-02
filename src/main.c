@@ -164,49 +164,196 @@ int check_quotes_input(char *str)
 
 
 char **split_input(char *input) {
+//     char **temp = ft_split(input, ' ');
+//     char **new_input = malloc(sizeof(char *) * (sizeof(temp) + 1));
+//     int j = 0;
+//     char *current_word = NULL;
+//     char char_temp = '\0';
+
+//     for (int i = 0; temp[i]; i++) {
+//         if (is_quote(temp[i][0])) {
+//             if (current_word == NULL) {
+//                 char_temp = temp[i][0];
+//                 current_word = ft_mllstrcpy(temp[i]);
+//                 if (strlen(temp[i]) == 1 || temp[i][strlen(temp[i]) - 1] == char_temp) {
+//                     new_input[j++] = current_word;
+//                     current_word = NULL;
+//                     char_temp = '\0';
+//                 }
+//             } else {
+//                 current_word = ft_mllstrcat(current_word, " ", 0);
+//                 current_word = ft_mllstrcat(current_word, temp[i], 0);
+
+//                 if (temp[i][strlen(temp[i]) - 1] == char_temp) {
+//                     new_input[j++] = current_word;
+//                     current_word = NULL;
+//                     char_temp = '\0';
+//                 }
+//             }
+//         } else if (current_word != NULL) {
+//             current_word = ft_mllstrcat(current_word, " ", 0);
+//             current_word = ft_mllstrcat(current_word, temp[i], 0);
+
+//             if (temp[i][strlen(temp[i]) - 1] == char_temp) {
+//                 new_input[j++] = current_word;
+//                 current_word = NULL;
+//                 char_temp = '\0';
+//             }
+//         } else {
+//             new_input[j++] = ft_mllstrcpy(temp[i]);
+//         }
+//     }
+//     new_input[j] = NULL;
+//     free_strings(temp);
+
+//     return new_input;
+// }
     char **temp = ft_split(input, ' ');
     char **new_input = malloc(sizeof(char *) * (sizeof(temp) + 1));
     int j = 0;
     char *current_word = NULL;
-    char char_temp = '\0';
 
     for (int i = 0; temp[i]; i++) {
-        if (is_quote(temp[i][0])) {
-            if (current_word == NULL) {
-                char_temp = temp[i][0];
-                current_word = ft_mllstrcpy(temp[i]);
-                if (strlen(temp[i]) == 1 || temp[i][strlen(temp[i]) - 1] == char_temp) {
+        char *token = temp[i];
+        while (token) {
+            // Verifique se o token começa com aspas simples, aspas duplas ou chaves
+            if (token[0] == '\'' || token[0] == '"' || token[0] == '{') {
+                char delimiter = (token[0] == '{') ? '}' : token[0];
+                int len = strlen(token);
+                current_word = ft_mllstrcpy(token + 1); // Ignorar o caractere de abertura
+                if (token[len - 1] == delimiter) {
+                    // A palavra está completamente contida nas aspas ou chaves
+                    current_word[len - 2] = '\0'; // Remova o caractere de fechamento
                     new_input[j++] = current_word;
                     current_word = NULL;
-                    char_temp = '\0';
+                } else {
+                    // Prossiga para o próximo token
+                    token = strchr(token + 1, delimiter);
+                    if (token) {
+                        current_word = ft_mllstrcat(current_word, " ", ' ');
+                        current_word = ft_mllstrcat(current_word, token + 1, ' ');
+                        if (token[strlen(token) - 1] == delimiter) {
+                            token = NULL;
+                        }
+                    }
                 }
+            } else if (strchr(token, '|') || strchr(token, '<') || strchr(token, '>')) {
+                // Manipule operadores de redirecionamento e pipes como palavras separadas
+                new_input[j++] = ft_mllstrcpy(token);
+                token = NULL;
             } else {
-                current_word = ft_mllstrcat(current_word, " ", 0);
-                current_word = ft_mllstrcat(current_word, temp[i], 0);
-
-                if (temp[i][strlen(temp[i]) - 1] == char_temp) {
-                    new_input[j++] = current_word;
-                    current_word = NULL;
-                    char_temp = '\0';
-                }
+                new_input[j++] = ft_mllstrcpy(token);
+                token = NULL;
             }
-        } else if (current_word != NULL) {
-            current_word = ft_mllstrcat(current_word, " ", 0);
-            current_word = ft_mllstrcat(current_word, temp[i], 0);
-
-            if (temp[i][strlen(temp[i]) - 1] == char_temp) {
-                new_input[j++] = current_word;
-                current_word = NULL;
-                char_temp = '\0';
-            }
-        } else {
-            new_input[j++] = ft_mllstrcpy(temp[i]);
         }
     }
     new_input[j] = NULL;
     free_strings(temp);
 
     return new_input;
+}
+
+// char *get_path(char *input, int *i)
+// {
+// 	(*i)++;
+// 	int i_temp = *i;
+// 	while(input[i_temp] && ft_isalnum(input[i_temp]))
+// 		i_temp++;
+// 	char *temp = malloc(sizeof(char) * ((*i) - i_temp + 1));
+// 	int len = 0;
+// 	while(input[*i] && ft_isalnum(input[*i]))
+// 	{
+// 		temp[len] = input[*i];
+// 		(*i)++;
+// 		len++;
+// 	}
+// 	temp[len] = 0;
+// 	return temp;
+// }
+
+// char *get_path_input(char *input, t_data *data)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	(void)data;
+// 	while(input[i])
+// 	{
+// 		if(input[i] == '$')
+// 		{
+// 			char *temp_path;
+
+// 			temp_path = get_path(input,&i);
+// 			printf("%s\n",temp_path);
+// 			free(temp_path);
+// 		}
+// 		else
+// 			i++;
+// 	}
+// 	return input;
+// }
+
+char *get_path(char *input, int *i) {
+    (*i)++;
+    int i_temp = *i;
+    while (input[i_temp] && isalnum(input[i_temp]))
+        i_temp++;
+    char *temp = malloc(sizeof(char) * (i_temp - *i + 1));
+    int len = 0;
+    while (input[*i] && isalnum(input[*i])) {
+        temp[len] = input[*i];
+        (*i)++;
+        len++;
+    }
+    temp[len] = '\0';
+    return temp;
+}
+
+int get_len_path(char *input, t_data *data)
+{
+	int len = 0;
+	int i = 0;
+	while (input[i]) {
+        if (input[i] == '$') {
+            char *temp_path = get_path(input, &i);
+			temp_path = ft_getenv(temp_path,data);
+			len += ft_strlen(temp_path);
+            free(temp_path);
+        } else {
+			len++;
+            i++;
+        }
+    }
+	return (len + 1);
+}
+
+char *get_path_input(char *input,t_data *data) {
+    int i = 0;
+	int len = 0;
+
+	len = get_len_path(input,data);
+	char *temp_input = malloc(sizeof(char) * len);
+	len = 0;
+    while (input[i]) {
+        if (input[i] == '$') {
+            char *temp_path = get_path(input, &i);
+			temp_path = ft_getenv(temp_path,data);
+			int i_temp = 0;
+			while(temp_path[i_temp])
+			{
+				temp_input[len] = temp_path[i_temp];
+				i_temp++;
+				len++;
+			}
+            free(temp_path);
+        } else {
+			temp_input[len] = input[i];
+			len++;
+            i++;
+        }
+    }
+	temp_input[len] = 0;
+    return temp_input;
 }
 
 int main(int ac, char **av, char **envp)
@@ -234,8 +381,11 @@ int main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 			input = new_input(input);
-			char **teste = split_input(input);
-			data->tokens_head = tokens_input(teste,data);
+			input = get_path_input(input,data);
+			// free(input);
+			// input = ft_mllstrcpy("echo '$PATH' 'ok' teste");
+			// printf("%s\n",input);
+			data->tokens_head = tokens_input(input,data);
 			if(!strncmp(data->tokens_head->command,"exit",4))
 			{
 				free_data(&data);
