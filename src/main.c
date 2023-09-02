@@ -327,6 +327,38 @@ int get_len_path(char *input, t_data *data)
 	return (len + 1);
 }
 
+bool check_quotes(char *input, int len)
+{
+	int i;
+	int i_quote;
+	int i_double_quotes;
+	int len_quote;
+	int len_double_quotes;
+
+	i = 0;
+	i_quote = 0;
+	i_double_quotes = 0;
+	len_quote = 0;
+	len_double_quotes = 0;
+	while(input[i] && i < len)
+	{
+		if(input[i] == '\'')
+		{
+			i_quote = i;
+			len_quote++;
+		}
+		if(input[i] == '"')
+		{
+			i_double_quotes = i;
+			len_double_quotes++;
+		}
+		i++;
+	}
+	if(len_quote % 2)
+		return false;
+	return true;
+}
+
 char *get_path_input(char *input,t_data *data) {
     int i = 0;
 	int len = 0;
@@ -335,7 +367,7 @@ char *get_path_input(char *input,t_data *data) {
 	char *temp_input = malloc(sizeof(char) * len);
 	len = 0;
     while (input[i]) {
-        if (input[i] == '$') {
+        if (input[i] == '$' && check_quotes(input,i)) {
             char *temp_path = get_path(input, &i);
 			temp_path = ft_getenv(temp_path,data);
 			int i_temp = 0;
