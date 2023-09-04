@@ -114,7 +114,7 @@ char *get_path_input(char *input,t_data *data) {
 	len = 0;
 	while (input[i])
 	{
-		if (input[i] == '$')
+		if (input[i] == '$' && input[0] != '\'')
 		{
 			temp_path = get_path(input, &i);
 			temp_path = ft_getenv(temp_path,data);
@@ -136,6 +136,44 @@ char *get_path_input(char *input,t_data *data) {
 	}
 	temp_input[len] = 0;
 	return (temp_input);
+}
+
+char **split_input(char *input) {
+	int input_len = strlen(input);
+	char **tokens = (char **)malloc(sizeof(char *) * (input_len + 1));
+	int token_count = 0;
+	int i = 0;
+
+	while (i < input_len)
+	{
+		while (i < input_len && input[i] == ' ')
+			i++;
+
+		if (i == input_len)
+			break;
+		int start = i;
+
+		if (is_quote(input[i]))
+		{
+			char quote_type = input[i];
+			i++;
+			while (i < input_len && input[i] != quote_type)
+				i++;
+			tokens[token_count] = strndup(input + start, i - start + 1);
+			token_count++;
+			i++; // Avançar para o próximo caractere após a citação
+			}
+			else
+			{
+			while (i < input_len && input[i] != ' ' && !is_quote(input[i]))
+				i++;
+			tokens[token_count] = strndup(input + start, i - start);
+			token_count++;
+		}
+	}
+
+	tokens[token_count] = NULL; // Marcar o final da lista com NULL
+	return tokens;
 }
 
 int main(int ac, char **av, char **envp)
@@ -163,8 +201,26 @@ int main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 			input = new_input(input);
-			input = get_path_input(input,data);
-			data->tokens_head = tokens_input(input,data);
+			// input = get_path_input(input,data);
+			char **teste = split_input(input);
+			//teste = get_path_input(teste,data);
+			int i = 0;
+			while(teste[i])
+			{
+				char *c_temp;
+				teste[i] = get_path_input(teste[i],data);
+				if(is_quote(teste[i][0]))
+				{
+					c_temp = malloc(2);
+					c_temp[0] = teste[i][0];
+					c_temp[1] = 0;
+					teste[i] = ft_strtrim(teste[i],c_temp);
+					free(c_temp);
+				}
+				i++;
+				//printf("%s\n",teste[i++]);
+			}
+			data->tokens_head = tokens_input(teste,data);
 			if(!strncmp(data->tokens_head->command,"exit",4))
 			{
 				free_data(&data);

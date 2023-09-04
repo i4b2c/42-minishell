@@ -150,7 +150,7 @@ void		init_signal(void);
 |**--TOKENS--**|
 \**************/
 void		add_token(t_tokens **h, char *s, t_type t);
-t_tokens	*tokens_input(char *i, t_data *d);
+t_tokens	*tokens_input(char **i, t_data *d);
 
 /*************\
 |**--UNSET--**|
