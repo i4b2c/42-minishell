@@ -1,79 +1,77 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokens.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/06 16:16:58 by icaldas           #+#    #+#             */
+/*   Updated: 2023/09/06 16:19:44 by icaldas          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-void add_token(t_tokens **head, char *str,t_type type)
+void	add_token(t_tokens **head, char *str, t_type type)
 {
-    t_tokens *new_token = malloc(sizeof(t_tokens));
-	t_tokens *temp;
-    if (!new_token) {
-        return;
-    }
+	t_tokens	*new_token;
+	t_tokens	*temp;
 
-    new_token->command = ft_mllstrcpy(str);
+	new_token = malloc(sizeof(t_tokens));
+	if (!new_token)
+		return ;
+	new_token->command = ft_mllstrcpy(str);
 	new_token->type = type;
-    new_token->next = NULL;
-
-    if (!*head) {
-        *head = new_token;
-    }
+	new_token->next = NULL;
+	if (!*head)
+		*head = new_token;
 	else
 	{
 		temp = *head;
-		while (temp->next) {
+		while (temp->next)
 			temp = temp->next;
-	}
 		temp->next = new_token;
 	}
 }
 
-t_tokens *tokens_input(char **command,t_data *data)
+t_tokens	*tokens_input(char **command, t_data *data)
 {
-	t_tokens *temp;
-	t_type type;
-	// char **command;
-	char **split_pipe;
-	int i;
+	t_tokens	*temp;
+	t_type		type;
+	char		**split_pipe;
+	int			i;
 
 	i = 0;
-	// command = ft_split(input,' ');
 	temp = NULL;
 	type = NORMAL;
-	while(command[i])
+	while (command[i])
 	{
-		if(!ft_strchr(command[i],'>')
-			&& !ft_strchr(command[i],'<'))
+		if (!ft_strchr(command[i], '>')
+			&& !ft_strchr(command[i], '<'))
 		{
-			if(ft_strchr(command[i],'|'))
+			if (ft_strchr(command[i], '|'))
 			{
-				add_token(&temp,"|",PIPE);
+				add_token(&temp, "|", PIPE);
 				type = NORMAL;
 			}
-			// else if(ft_strchr(command[i],'$') && command[i][0] != '\'')
-			// {
-			// 	char *new_temp;
-
-			// 	new_temp = ft_getenv(command[i],data);
-			// 	add_token(&temp,new_temp,type);
-			// 	free(new_temp);
-			// }
 			else
-				add_token(&temp,command[i],type);
+				add_token(&temp, command[i], type);
 			type = NORMAL;
 			i++;
 		}
 		else
 		{
-			if(!ft_strncmp(command[i],">>",3))
+			if (!ft_strncmp(command[i], ">>", 3))
 				type = RDR_AP_OUT;
-			else if(!ft_strncmp(command[i],"<<",3))
+			else if (!ft_strncmp(command[i], "<<", 3))
 				type = RDR_RD_IN;
-			else if(ft_strchr(command[i],'>'))
+			else if (ft_strchr(command[i], '>'))
 				type = RDR_OUT;
-			else if(ft_strchr(command[i],'<'))
+			else if (ft_strchr(command[i], '<'))
 				type = RDR_IN;
 			i++;
 		}
 	}
 	free_strings(command);
-	//free(input);
-	return temp;
+	return (temp);
 }

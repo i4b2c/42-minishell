@@ -1,20 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   util_string.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/06 16:20:57 by icaldas           #+#    #+#             */
+/*   Updated: 2023/09/06 16:20:57 by icaldas          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-int len_strings(char **cmd)
+int	len_strings(char **cmd)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(cmd[i])
+	while (cmd[i])
 		i++;
-	return i;
+	return (i);
 }
 
-void print_string(char **str)
+void	print_string(char **str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
-		ft_printf("%s\n",str[i++]);
+	while (str[i])
+		ft_printf("%s\n", str[i++]);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/06 16:16:19 by icaldas           #+#    #+#             */
+/*   Updated: 2023/09/06 16:16:19 by icaldas          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 extern volatile long long	g_exit_status;
@@ -24,7 +36,7 @@ void	dismiss_signal(int signum)
 	}
 }
 
-void init_signal(void)
+void	init_signal(void)
 {
 	struct sigaction	sa;
 

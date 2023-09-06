@@ -12,23 +12,22 @@
 
 #include "../include/minishell.h"
 
-
-void free_strings(char **str)
+void	free_strings(char **str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 		free(str[i++]);
 	free(str);
 }
 
-void free_data(t_data **data)
+void	free_data(t_data **data)
 {
-	t_varlst *temp_var;
-	t_statlst *temp_stat;
+	t_varlst	*temp_var;
+	t_statlst	*temp_stat;
 
-	while((*data)->var_head != NULL)
+	while ((*data)->var_head != NULL)
 	{
 		temp_var = (*data)->var_head->next;
 		free((*data)->var_head->var_name);
@@ -36,7 +35,7 @@ void free_data(t_data **data)
 		free((*data)->var_head);
 		(*data)->var_head = temp_var;
 	}
-	while((*data)->stat_head != NULL)
+	while ((*data)->stat_head != NULL)
 	{
 		temp_stat = (*data)->stat_head->next;
 		free((*data)->stat_head);
@@ -46,11 +45,11 @@ void free_data(t_data **data)
 	*data = NULL;
 }
 
-void free_tokens(t_data *data)
+void	free_tokens(t_data *data)
 {
-	t_tokens *temp_tokens;
+	t_tokens	*temp_tokens;
 
-	while(data->tokens_head != NULL)
+	while (data->tokens_head != NULL)
 	{
 		temp_tokens = data->tokens_head->next;
 		free(data->tokens_head->command);
