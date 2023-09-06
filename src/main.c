@@ -6,7 +6,7 @@
 /*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/06 16:15:17 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/06 16:24:13 by icaldas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ char	*get_path(char *input, int *i)
 	int		i_temp;
 	char	*temp;
 
-	temp = malloc(sizeof(char) * (i_temp - *i + 1));
 	i_temp = *i;
+	temp = malloc(sizeof(char) * (i_temp - *i + 1));
 	len = 0;
 	(*i)++;
 	while (input[i_temp] && isalnum(input[i_temp]))
