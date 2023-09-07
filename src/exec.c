@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+extern long long	g_exit_status;
+
 char	*check_command(char *command, char **path)
 {
 	char	*teste;
@@ -39,7 +41,7 @@ char	*ft_getenv(const char *str, t_data *data)
 	temp_var = data->var_head;
 	while (temp_var)
 	{
-		if (!strncmp(temp_var->var_name, str, ft_strlen((char *)str)))
+		if (!strncmp(temp_var->var_name, str, ft_strlen((char *)temp_var->var_name)))
 			return (ft_mllstrcpy(temp_var->var_value));
 		temp_var = temp_var->next;
 	}
@@ -66,9 +68,18 @@ void	ft_execve(char **command, t_data *data)
 	if (!access(command[0], X_OK))
 		execve(command[0], command, NULL);
 	dup2(STDOUT_FILENO, 1);
-	write(2, "minishell : command not found\n", 30);
+	if(command[0][0] == '.' && command[0][1] == '/')
+	{
+		g_exit_status = 126;
+		perror("minishell");
+	}
+	else
+	{
+		g_exit_status = 127;
+		write(2, "minishell : command not found\n", 30);
+	}
 	free_strings(command);
-	exit(-1);
+	exit(g_exit_status);
 }
 
 void	read_stdin(char *str, int fd_temp)
@@ -125,39 +136,39 @@ int	pipe_string(t_tokens *tokens)
 	return (pipe);
 }
 
-bool	try_simple_exec(char **command, t_data *data)
-{
-	if (!ft_strncmp(command[0], "export", 6))
-	{
-		if (data->tokens_head->next != NULL
-			&& data->tokens_head->next->type == NORMAL)
-			change_env(data, command);
-		else
-			print_export(data);
-		return (true);
-	}
-	else if (!ft_strncmp(command[0], "unset", 5))
-	{
-		exec_unset(data, command);
-		return (true);
-	}
-	else if (!ft_strncmp(command[0], "cd", 2))
-	{
-		exec_chdir(command);
-		return (true);
-	}
-	else if (!strncmp(command[0], "env", 3))
-	{
-		print_env(data);
-		return (true);
-	}
-	else if (!strncmp(command[0], "echo", 4))
-	{
-		exec_echo(data, command);
-		return (true);
-	}
-	return (false);
-}
+// bool	try_simple_exec(char **command, t_data *data)
+// {
+// 	if (!ft_strncmp(command[0], "export", 6))
+// 	{
+// 		if (data->tokens_head->next != NULL
+// 			&& data->tokens_head->next->type == NORMAL)
+// 			change_env(data, command);
+// 		else
+// 			print_export(data);
+// 		return (true);
+// 	}
+// 	else if (!ft_strncmp(command[0], "unset", 5))
+// 	{
+// 		exec_unset(data, command);
+// 		return (true);
+// 	}
+// 	else if (!ft_strncmp(command[0], "cd", 2))
+// 	{
+// 		exec_chdir(command);
+// 		return (true);
+// 	}
+// 	else if (!strncmp(command[0], "env", 3))
+// 	{
+// 		print_env(data);
+// 		return (true);
+// 	}
+// 	else if (!strncmp(command[0], "echo", 4))
+// 	{
+// 		exec_echo(data, command);
+// 		return (true);
+// 	}
+// 	return (false);
+// }
 
 void	choose_exec(char **command, t_data *data)
 {
@@ -186,7 +197,11 @@ void	choose_exec(char **command, t_data *data)
 			ft_execve(command, data);
 		}
 		else
-			waitpid(pid, NULL, 0);
+		{
+			int status;
+			waitpid(pid, &status, 0);
+			g_exit_status = WEXITSTATUS(status);
+		}
 	}
 }
 

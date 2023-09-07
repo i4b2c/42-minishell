@@ -12,7 +12,7 @@
 
 #include "../include/minishell.h"
 
-extern volatile long long	g_exit_status;
+extern long long	g_exit_status;
 
 void	child_process(int signum)
 {

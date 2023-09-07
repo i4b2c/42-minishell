@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/06 16:24:13 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/07 18:16:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-volatile long long	g_exit_status = 0;
+long long	g_exit_status = 0;
 
 int	get_len_pipes(char *input)
 {
@@ -144,7 +144,23 @@ char	*get_path_input(char *input, t_data *data)
 	len = 0;
 	while (input[i])
 	{
-		if (input[i] == '$' && input[0] != '\'')
+		if(input[i] == '$' && input[i+1] == '?'
+			&& input[0] != '\'')
+			{
+				char *temp_int;
+				int i_int_temp = 0;
+
+				temp_int = ft_itoa(g_exit_status);
+				while(temp_int[i_int_temp])
+				{
+					temp_input[len] = temp_int[i_int_temp];
+					i_int_temp++;
+					len++;
+				}
+				i += 2;
+				free(temp_int);
+			}
+		else if (input[i] == '$' && input[0] != '\'')
 		{
 			temp_path = get_path(input, &i);
 			temp_path = ft_getenv(temp_path, data);
@@ -189,6 +205,13 @@ char	**cut_quote(char **tokens, t_data *data)
 	}
 	return (tokens);
 }
+
+typedef struct d_quote
+{
+	char *command;
+	bool together;
+	struct d_quote *next;
+} t_quote;
 
 char	**split_input(char *input, t_data *data)
 {
@@ -260,10 +283,19 @@ int	main(int ac, char **av, char **envp)
 			input = new_input(input);
 			input_split = split_input(input, data);
 			data->tokens_head = tokens_input(input_split, data);
-			if(!strncmp(data->tokens_head->command, "exit", 4))
+			if(!ft_strncmp(data->tokens_head->command, "exit", 4))
 			{
-				free_data(&data);
-				break ;
+				if(data->tokens_head->next != NULL)
+				{
+					int temp = ft_atoi(data->tokens_head->next->command);
+					free_data(&data);
+					exit(temp);
+				}
+				else
+				{
+					free_data(&data);
+					exit(0);
+				}
 			}
 			exec_tokens(data);
 			unlink(TEMP_FILE);

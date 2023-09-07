@@ -29,29 +29,29 @@ int	search_envp(t_data *data, char *cmd)
 	return (0);
 }
 
-void	exec_echo(t_data *data, char **input)
-{
-	char	*temp;
-	int		i;
+// void	exec_echo(t_data *data, char **input)
+// {
+// 	char	*temp;
+// 	int		i;
 
-	i = 0;
-	while (input[++i])
-	{
-		temp = ft_strtrim(input[i], "\"");
-		if (temp[0] == '$')
-		{
-			if (search_envp(data, temp)
-				&& input[i + 1])
-				write(STDOUT_FILENO, " ", 1);
-		}
-		else
-		{
-			ft_printf("%s", temp);
-			if (input[i + 1])
-				write(STDOUT_FILENO, " ", 1);
-		}
-		free(temp);
-	}
-	write(STDOUT_FILENO, "\n", 1);
-	free_strings(input);
-}
+// 	i = 0;
+// 	while (input[++i])
+// 	{
+// 		temp = ft_strtrim(input[i], "\"");
+// 		if (temp[0] == '$')
+// 		{
+// 			if (search_envp(data, temp)
+// 				&& input[i + 1])
+// 				write(STDOUT_FILENO, " ", 1);
+// 		}
+// 		else
+// 		{
+// 			ft_printf("%s", temp);
+// 			if (input[i + 1])
+// 				write(STDOUT_FILENO, " ", 1);
+// 		}
+// 		free(temp);
+// 	}
+// 	write(STDOUT_FILENO, "\n", 1);
+// 	free_strings(input);
+// }
