@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 16:16:58 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/08 08:11:12 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/08 18:02:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,52 @@
 
 extern volatile long long g_exit_status;
 
-int	get_unquoted_size(char *str)
+int	get_unquoted_size(char *str, char quote)
 {
-	int	start;
+	int	len;
 	int	i;
 
 	i = 0;
-	if (str[i] == '"')
+	len = 0;
+	while (str[i])
 	{
-		while (str[i] == '"')
-			i++;
-		start = i;
-		while (str[i] != '"')
-			i++;
-		return (i - start);
+		if (str[i] != quote)
+			len++;
+		i++;
 	}
-	else if (str[i] == '\'')
-	{
-		while (str[i] == '\'')
-			i++;
-		start = i;
-		while (str[i] != '\'')
-			i++;
-		return (i - start);
-	}
+	return (len);
+
 }
+
+
+char	*cut_quotes_teste(char *input)
+{
+	int len;
+	char *output;
+	int output_index;
+	bool inside_single_quotes;
+	bool inside_double_quotes;
+	int i;
+
+	inside_double_quotes = false;
+	inside_single_quotes = false;
+	output_index = 0;
+	len = ft_strlen(input);
+	output = malloc(len + 1);
+	i = -1;
+	while(++i < len)
+	{
+		if (input[i] == '\'' && !inside_double_quotes)
+			inside_single_quotes = !inside_single_quotes;
+		else if (input[i] == '"' && !inside_single_quotes)
+			inside_double_quotes = !inside_double_quotes;
+		else
+			output[output_index++] = input[i];
+	}
+	output[output_index] = '\0';
+	return (output);
+}
+
 
 char	*remove_single_quotes(char *str)
 {
@@ -48,7 +69,7 @@ char	*remove_single_quotes(char *str)
 
 	i = 0;
 	j = 0;
-	int size = get_unquoted_size(str);
+	int size = get_unquoted_size(str, '\'');
 	//printf("%d\n", size);
 	quotes_free = malloc(sizeof(char) * size + 1);
 	while (str[i])
@@ -76,7 +97,7 @@ char	*remove_double_quotes(char *str)
 
 	i = 0;
 	j = 0;
-	int size = get_unquoted_size(str);
+	int size = get_unquoted_size(str, '"');
 	//printf("%d\n", size);
 	quotes_free = malloc(sizeof(char) * size + 1);
 	while (str[i])
@@ -326,32 +347,14 @@ void	remove_head_quotes(t_tokens *head,t_data *data)
 		return ;
 }
 
-char check_quote(char *str)
-{
-	int i;
-
-	i = 0;
-	while(str[i])
-	{
-		if(str[i] == '\'' || str[i] == '"')
-			break;
-		i++;
-	}
-	return str[i];
-}
-
 void	remove_quotes(t_tokens *head,t_data *data)
 {
-	char c_temp;
 	while (head != NULL)
 	{
-		c_temp = check_quote(head->command);
-		if(c_temp != '\'')
+		if(head->command[0] != '\'')
 			head->command = get_path_input(head->command,data);
-		if(c_temp == '\'')
-			head->command = remove_single_quotes(head->command);
-		else if(c_temp == '"')
-			head->command = remove_double_quotes(head->command);
+		if(head->command[0] == '\'' || head->command[0] == '"')
+			head->command = cut_quotes_teste(head->command);
 		head = head->next;
 	}
 }

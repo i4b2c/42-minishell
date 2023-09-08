@@ -81,9 +81,9 @@ void		exec_chdir(char **i);
 t_statlst	*get_stat(int ac, char **av);
 t_varlst	*get_var(char **envp);
 t_data		*get_data(int ac, char **av, char **envp);
-char *get_path_input(char *input,t_data *data);
-char	*get_path(char *input, int *i);
-int	get_len_path(char *input, t_data *data);
+char 		*get_path_input(char *input,t_data *data);
+char		*get_path(char *input, int *i);
+int			get_len_path(char *input, t_data *data);
 
 
 
@@ -104,7 +104,7 @@ void		change_env(t_data *data, char **input);
 /*************\
 |**--ERROR--**|
 \*************/
-int		error(char *str, char str_extra);
+int			error(char *str, char str_extra);
 
 /************\
 |**--EXEC--**|
@@ -140,6 +140,7 @@ char		*get_input(void);
 bool		check_input(char *str);
 int			get_next_quote(char *str, int begin, char quote);
 bool		is_there_quotes(char *str);
+char 		check_quote(char *str);
 void		cntr_d(char *input, t_data **data);
 
 /****************\
@@ -158,7 +159,7 @@ void		init_signal(void);
 /**************\
 |**--TOKENS--**|
 \**************/
-int		add_token(t_tokens **h, char *s, t_type t);
+int			add_token(t_tokens **h, char *s, t_type t);
 t_tokens	*tokens_input(char **i, t_data *d);
 t_tokens	*get_tokens(t_data *data, char *str);
 
@@ -183,7 +184,6 @@ void		print_string(char **str);
 \************/
 char		*ft_mllstrcpy(char *str);
 void		add_list(t_data *data, t_varlst *temp);
-
-int is_quote(char c);
+int 	is_quote(char c);
 
 #endif

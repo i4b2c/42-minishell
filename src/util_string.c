@@ -30,3 +30,17 @@ void	print_string(char **str)
 	while (str[i])
 		ft_printf("%s\n", str[i++]);
 }
+
+char check_quote(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			break;
+		i++;
+	}
+	return str[i];
+}
