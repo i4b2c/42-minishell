@@ -234,12 +234,15 @@ void	exec_tokens(t_data *data)
 			|| temp->type == RDR_AP_OUT)
 			{
 				data->check_out = true;
+				// if(!change_stdout(temp->command, temp->type))
+				// 	return ;
 				temp->fd_out = change_stdout(temp->command, temp->type);
 			}
 		else if (temp->type == RDR_IN)
 		{
 			data->check_in = true;
-			change_stdin(temp->command);
+			if(!change_stdin(temp->command))
+				return ;
 		}
 		else if (temp->type == RDR_RD_IN)
 		{

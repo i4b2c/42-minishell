@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/08 19:09:13 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/09 12:07:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,42 @@ void print_tokens(t_data *data)
 	}
 }
 
+long long int	ft_atoll(const char *str)
+{
+	long long int			result;
+	int						sign;
+
+	result = 0;
+	sign = 1;
+	while ((*str > 8 && *str < 14) || *str == 32)
+		str++;
+	if (*str == 45 || *str == 43)
+	{
+		if (*str == 45)
+			sign = -1;
+		str++;
+	}
+	while (*str > 47 && *str < 58)
+	{
+		result = result * 10 + (*str - 48);
+		str++;
+	}
+	return ((long long int)result * sign);
+}
+
+int len_data(t_tokens *tokens)
+{
+	int i;
+
+	i = 0;
+	while(tokens)
+	{
+		tokens = tokens->next;
+		i++;
+	}
+	return i;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_data	*data;
@@ -264,8 +300,24 @@ int	main(int ac, char **av, char **envp)
 			//printf("first token ->%s\n", data->tokens_head->command); //-- confirma que o primeiro comando está com bug
 			if(!strncmp(data->tokens_head->command, "exit", 4))
 			{
-				free_data(&data);
-				break ;
+				if(len_data(data->tokens_head) > 2)
+				{
+					free_data(&data);
+					write(2,"minishell: too many arguments\n",31);
+					exit(1);
+				}
+				else if(data->tokens_head->next)
+				{
+					long long int num_exit;
+					num_exit = ft_atoll(data->tokens_head->next->command);
+					free_data(&data);
+					exit((int)num_exit);
+				}
+				else
+				{
+					free_data(&data);
+					exit(0);
+				}
 			}
 			exec_tokens(data);
 			unlink(TEMP_FILE);

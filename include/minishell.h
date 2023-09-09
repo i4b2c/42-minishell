@@ -147,7 +147,7 @@ void		cntr_d(char *input, t_data **data);
 |**--REDIRECT--**|
 \****************/
 int			change_stdout(char *str, t_type type);
-void		change_stdin(char *str);
+bool		change_stdin(char *str);
 
 /**************\
 |**--SIGNAL--**|
