@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+extern volatile long long g_exit_status;
+
 void	exec_unset(t_data *data, char **input)
 {
 	t_varlst	*temp_var;
@@ -21,7 +23,11 @@ void	exec_unset(t_data *data, char **input)
 	i = 0;
 	while (input[++i])
 	{
-		//check input depois !! importante
+		if (check_input_env(input[i]))
+		{
+			write(2,"not a valid identifier\n",24);
+			g_exit_status = 1;
+		}
 		temp_var = data->var_head;
 		while (temp_var)
 		{

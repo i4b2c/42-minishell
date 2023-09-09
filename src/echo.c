@@ -78,6 +78,13 @@ void	final_quote_check(char *str)
 
 void	exec_echo(t_data *data, char **input)
 {
+	// t_tokens *temp;
+
+	// temp = data->tokens_head;
+	// while(temp)
+	// {
+
+	// }
 	char	*temp;
 	int		i;
 

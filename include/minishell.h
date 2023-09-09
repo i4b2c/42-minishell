@@ -101,6 +101,7 @@ bool		check_exist_env(t_data *data, char *input);
 void		change_exist_env(t_data *data, char **cmd);
 bool		check_input_env(char *str);
 void		change_env(t_data *data, char **input);
+bool	check_input_env(char *str);
 
 /*************\
 |**--ERROR--**|

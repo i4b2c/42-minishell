@@ -154,6 +154,8 @@ void	choose_exec(char **command, t_data *data)
 		exec_chdir(command);
 	else if (!strncmp(command[0], "env", 3))
 		print_env(data);
+	// else if(!strncmp(command[0],"echo",4))
+	// 	exec_echo(data);
 	else
 	{
 		pid = fork();
