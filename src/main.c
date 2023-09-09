@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/09 12:07:29 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/09 17:38:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,6 +268,28 @@ int len_data(t_tokens *tokens)
 	return i;
 }
 
+bool check_non_numeric(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		if(i > 0)
+		{
+			if(!(str[i] >= '0' && str[i] <= '9'))
+				return true;
+		}
+		else
+		{
+			if(!(str[i] >= '0' && str[i] <= '9') && str[i] != '-' && str[i] != '+')
+				return true;
+		}
+		i++;
+	}
+	return false;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_data	*data;
@@ -309,6 +331,12 @@ int	main(int ac, char **av, char **envp)
 				else if(data->tokens_head->next)
 				{
 					long long int num_exit;
+					if(check_non_numeric(data->tokens_head->next->command))
+					{
+						write(2,"minishell: numeric argument required\n",38);
+						free_data(&data);
+						exit(2);
+					}
 					num_exit = ft_atoll(data->tokens_head->next->command);
 					free_data(&data);
 					exit((int)num_exit);

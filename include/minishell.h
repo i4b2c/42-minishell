@@ -57,6 +57,7 @@ typedef struct s_varlst
 {
 	char			*var_name;
 	char			*var_value;
+	// bool			equal_char;
 	struct s_varlst	*next;
 }				t_varlst;
 
