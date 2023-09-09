@@ -57,7 +57,7 @@ char	*copy_var(t_varlst *temp)
 		return (temp_envp);
 	}
 	temp_envp[len_var] = '=';
-	if(!temp->var_value[0])
+	if(!(temp->var_value[0]))
 	{
 		temp_envp[len_var + 1] = 0;
 		return (temp_envp);

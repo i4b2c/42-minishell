@@ -91,12 +91,23 @@ void	change_env(t_data *data, char **input)
 			command = ft_split(input[j], '=');
 			// printf("%s -> %s",command[0],command[1]);
 			if (check_exist_env(data, command[0]))
+			{
+				if(!command[1] && ft_strchr(input[j],'='))
+				{
+					command[1] = calloc(1,1);
+					command[2] = NULL;
+				}
 				change_exist_env(data, command);
+			}
 			else
 			{
 				temp_var->var_name = ft_mllstrcpy(command[0]);
-				// temp_var->var_value = ft_mllstrcpy(command[1]);
-				temp_var->var_value = NULL;
+				if(command[1])
+					temp_var->var_value = ft_mllstrcpy(command[1]);
+				else if(!ft_strchr(input[j],'='))
+					temp_var->var_value = NULL;
+				else
+					temp_var->var_value = calloc(1,1);
 				temp_var->next = NULL;
 				add_list(data, temp_var);
 				temp_var = temp_var->next;
