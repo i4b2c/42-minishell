@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/09 17:38:20 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/10 14:57:54 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	get_len_pipes(char *input)
 	while (input[i])
 	{
 		if (input[i] == '|')
+			len++;
+		else if(input[i] == '<' || input[i] == '<')
 			len++;
 		i++;
 	}
@@ -57,13 +59,39 @@ char	*new_input(char *input)
 	new_input = malloc(((get_len_pipes(input) * 2) + 1 + ft_strlen(input)) * sizeof(char));
 	while (input[i_input])
 	{
-		if (input[i_input] == '|' && !check_closed_quotes(input,i_input))
+		if((input[i_input] == '<' && input[i_input + 1] == '<' && !check_closed_quotes(input,i_input))
+			|| (input[i_input] == '>' && input[i_input + 1] == '>' && !check_closed_quotes(input,i_input)))
+		{
+			new_input[i_new] = ' ';
+			new_input[i_new + 1] = input[i_input];
+			new_input[i_new + 2] = input[i_input];
+			new_input[i_new + 3] = ' ';
+			i_input++;
+			i_new += 3;
+		}
+		else if ((input[i_input] == '|' && !check_closed_quotes(input,i_input))
+			|| (input[i_input] == '>' && !check_closed_quotes(input,i_input))
+			|| (input[i_input] == '<' && !check_closed_quotes(input,i_input)))
 		{
 			new_input[i_new] = ' ';
 			new_input[i_new + 1] = input[i_input];
 			new_input[i_new + 2] = ' ';
 			i_new += 2;
 		}
+		// else if (input[i_input] == '<' && !check_closed_quotes(input,i_input))
+		// {
+		// 	new_input[i_new] = ' ';
+		// 	new_input[i_new + 1] = input[i_input];
+		// 	new_input[i_new + 2] = ' ';
+		// 	i_new += 2;
+		// }
+		// else if (input[i_input] == '>' && !check_closed_quotes(input,i_input))
+		// {
+		// 	new_input[i_new] = ' ';
+		// 	new_input[i_new + 1] = input[i_input];
+		// 	new_input[i_new + 2] = ' ';
+		// 	i_new += 2;
+		// }
 		else
 			new_input[i_new] = input[i_input];
 		i_new++;
