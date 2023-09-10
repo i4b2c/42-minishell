@@ -52,7 +52,7 @@ bool	change_stdin(char *str)
 	int	fd;
 	int check_access;
 
-	check_access = access(str,F_OK);
+	check_access = access(str,R_OK);
 	if(check_access == -1)
 	{
 		perror("minishell:");
