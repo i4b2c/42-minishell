@@ -53,6 +53,7 @@ void	ft_execve(char **command, t_data *data)
 	char	*path;
 	char	*check;
 	char	**check_split;
+	struct stat file_stat;
 
 	path = ft_getenv("PATH", data);
 	if (!path)
@@ -68,17 +69,36 @@ void	ft_execve(char **command, t_data *data)
 	if (!access(command[0], X_OK))
 		execve(command[0], command, NULL);
 	dup2(STDOUT_FILENO, 1);
-	if(command[0][0] == '.' && command[0][1] == '/')
+	if(access(command[0],F_OK) == -1)
 	{
-		g_exit_status = 126;
+		write(2, "minishell : command not found\n", 30);
+		g_exit_status = 127;
+		free_strings(command);
+		exit(g_exit_status);
+	}
+	if(access(command[0],X_OK) == -1)
+	{
 		perror("minishell");
+		g_exit_status = 126;
+		free_strings(command);
+		exit(g_exit_status);
+	}
+	else if(lstat(command[0],&file_stat) == 0 && ft_strchr(command[0],'/'))
+	{
+		if(S_ISDIR(file_stat.st_mode))
+		{
+			g_exit_status = 126;
+			write(2, "minishell : Is a directory\n", 28);
+			free_strings(command);
+			exit(g_exit_status);
+		}
 	}
 	else
 	{
-		g_exit_status = 127;
 		write(2, "minishell : command not found\n", 30);
+		g_exit_status = 127;
+		free_strings(command);
 	}
-	free_strings(command);
 	exit(g_exit_status);
 }
 

@@ -17,6 +17,7 @@
 # include <limits.h>
 # include <stdbool.h>
 # include <sys/errno.h>
+# include <sys/stat.h>
 
 # define MALLOC "minishell: Error Memory Allocation\n"
 # define ARGS "Invalid argument: ./minishell\n"
