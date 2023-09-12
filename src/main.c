@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/10 14:57:54 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/12 18:09:52 by icaldas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,20 +244,8 @@ char	**split_input(char *input, t_data *data)
 			token_count++;
 		}
 	}
-	//printf("%s\n", tokens[0]);
 	tokens[token_count] = NULL;
 	return (cut_quote(tokens,data));
-}
-
-//apenas para teste
-void print_tokens(t_data *data)
-{
-	t_tokens *temp = data->tokens_head;
-	while(temp)
-	{
-		printf("%s -> %d\n",temp->command,temp->type);
-		temp = temp->next;
-	}
 }
 
 long long int	ft_atoll(const char *str)
@@ -324,7 +312,6 @@ int	main(int ac, char **av, char **envp)
 	char	*input;
 	int		temp_stdout;
 	int		temp_stdin;
-	//char	**input_split;
 
 	if (ac > 1 && av)
 		error(ARGS, '\0');
@@ -344,10 +331,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 			input = new_input(input);
-			//input_split = split_input(input, data);
 			data->tokens_head = get_tokens(data, input);
-			// print_tokens(data);
-			//printf("first token ->%s\n", data->tokens_head->command); //-- confirma que o primeiro comando está com bug
 			if(!strncmp(data->tokens_head->command, "exit", 4))
 			{
 				if(len_data(data->tokens_head) > 2)

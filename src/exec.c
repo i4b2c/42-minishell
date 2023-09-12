@@ -174,8 +174,6 @@ void	choose_exec(char **command, t_data *data)
 		exec_chdir(command);
 	else if (!strncmp(command[0], "env", 3))
 		print_env(data);
-	// else if(!strncmp(command[0],"echo",4))
-	// 	exec_echo(data);
 	else
 	{
 		pid = fork();
@@ -256,8 +254,6 @@ void	exec_tokens(t_data *data)
 			|| temp->type == RDR_AP_OUT)
 			{
 				data->check_out = true;
-				// if(!change_stdout(temp->command, temp->type))
-				// 	return ;
 				temp->fd_out = change_stdout(temp->command, temp->type);
 			}
 		else if (temp->type == RDR_IN)
