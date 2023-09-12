@@ -42,11 +42,35 @@ char	*ft_getenv(const char *str, t_data *data)
 	while (temp_var)
 	{
 		if (!strncmp(temp_var->var_name, str,
-			ft_strlen((char *)temp_var->var_name)))
+				ft_strlen((char *)temp_var->var_name)))
 			return (ft_mllstrcpy(temp_var->var_value));
 		temp_var = temp_var->next;
 	}
 	return (ft_calloc(1, 1));
+}
+
+int	error_dir(char **command)
+{
+	g_exit_status = 126;
+	write(2, "minishell : Is a directory\n", 28);
+	free_strings(command);
+	return (g_exit_status);
+}
+
+int	error_nf(char **command)
+{
+	write(2, "minishell : command not found\n", 30);
+	g_exit_status = 127;
+	free_strings(command);
+	return (g_exit_status);
+}
+
+int	error_access(char **command)
+{
+	perror("minishell");
+	g_exit_status = 126;
+	free_strings(command);
+	return (g_exit_status);
 }
 
 void	ft_execve(char **command, t_data *data)
@@ -58,54 +82,45 @@ void	ft_execve(char **command, t_data *data)
 
 	path = ft_getenv("PATH", data);
 	if (!path)
-	{
-		write(2, "minishell : command not found\n", 30);
-		free_strings(command);
-		exit(0);
-	}
+		exit(error_nf(command));
 	check_split = ft_split(path, ':');
 	check = check_command(command[0], check_split);
 	if (check)
-		execve(check, command, NULL);
+		execve(check, command, data->envp);
 	if (!access(command[0], X_OK))
-		execve(command[0], command, NULL);
+		execve(command[0], command, data->envp);
 	dup2(STDOUT_FILENO, 1);
 	if (access(command[0], F_OK) == -1)
-	{
-		write(2, "minishell : command not found\n", 30);
-		g_exit_status = 127;
-		free_strings(command);
-		exit(g_exit_status);
-	}
+		exit(error_nf(command));
 	if (access(command[0], X_OK) == -1)
-	{
-		perror("minishell");
-		g_exit_status = 126;
-		free_strings(command);
 		exit(g_exit_status);
-	}
-	else if (lstat(command[0], &file_stat) == 0 && ft_strchr(command[0], '/'))
-	{
-		if (S_ISDIR(file_stat.st_mode))
-		{
-			g_exit_status = 126;
-			write(2, "minishell : Is a directory\n", 28);
-			free_strings(command);
-			exit(g_exit_status);
-		}
-	}
+	else if (lstat(command[0], &file_stat) == 0 && ft_strchr(command[0], '/')
+		&& (S_ISDIR(file_stat.st_mode)))
+		exit(error_dir(command));
 	else
+		exit(error_nf(command));
+}
+
+void	execute_rdin(int fd, char *str)
+{
+	char	*input;
+
+	while (1)
 	{
-		write(2, "minishell : command not found\n", 30);
-		g_exit_status = 127;
-		free_strings(command);
+		input = readline("> ");
+		if (!ft_strncmp(input, str, ft_strlen(str)))
+			break ;
+		else
+		{
+			write(fd, input, ft_strlen(input));
+			write(fd, "\n", 1);
+		}
+		free(input);
 	}
-	exit(g_exit_status);
 }
 
 void	read_stdin(char *str, int fd_temp)
 {
-	char	*input;
 	int		fd;
 	int		check_unlink;
 	pid_t	pid;
@@ -118,18 +133,7 @@ void	read_stdin(char *str, int fd_temp)
 	if (pid == (pid_t)0)
 	{
 		signal(SIGINT, child_process);
-		while (1)
-		{
-			input = readline("> ");
-			if (!ft_strncmp(input, str, ft_strlen(str)))
-				break ;
-			else
-			{
-				write(fd, input, ft_strlen(input));
-				write(fd, "\n", 1);
-			}
-			free(input);
-		}
+		execute_rdin(fd, str);
 		exit(0);
 	}
 	else
@@ -157,11 +161,26 @@ int	pipe_string(t_tokens *tokens)
 	return (pipe);
 }
 
-void	choose_exec(char **command, t_data *data)
+void	exec_command(char **command, t_data *data)
 {
 	pid_t	pid;
 	int		status;
 
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, child_process);
+		ft_execve(command, data);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		g_exit_status = WEXITSTATUS(status);
+	}
+}
+
+void	choose_exec(char **command, t_data *data)
+{
 	if (!ft_strncmp(command[0], "export", 6))
 	{
 		if (data->tokens_head->next != NULL
@@ -177,19 +196,7 @@ void	choose_exec(char **command, t_data *data)
 	else if (!strncmp(command[0], "env", 3))
 		print_env(data);
 	else
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			signal(SIGINT, child_process);
-			ft_execve(command, data);
-		}
-		else
-		{
-			waitpid(pid, &status, 0);
-			g_exit_status = WEXITSTATUS(status);
-		}
-	}
+		exec_command(command, data);
 }
 
 int	is_quote(char c)
@@ -219,12 +226,13 @@ char	*cut_quotes(char *input, char quote)
 	return (temp);
 }
 
-char **exec_pipe(t_data *data,char **command, int len)
+char	**exec_pipe(t_data *data, char **command, int len, int i)
 {
-	int fd;
+	int	fd;
 
 	if (!data->check_out)
 		change_stdout(TEMP_FILE_OUT, RDR_OUT);
+	command[i] = NULL;
 	choose_exec(command, data);
 	dup2(data->fd_in, STDIN_FILENO);
 	if (!data->check_out)
@@ -240,39 +248,6 @@ char **exec_pipe(t_data *data,char **command, int len)
 	return (command);
 }
 
-// void choose_redirect(int temp_i, int temp_o, t_data *data, t_tokens *temp, char **command)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	if (temp->type == NORMAL)
-// 		command[i++] = ft_mllstrcpy(temp->command);
-// 	else if (temp->type == RDR_OUT || temp->type == RDR_AP_OUT)
-// 	{
-// 		data->check_out = true;
-// 		temp->fd_out = change_stdout(temp->command, temp->type);
-// 	}
-// 	else if (temp->type == RDR_IN)
-// 	{
-// 		data->check_in = true;
-// 		if (!change_stdin(temp->command))
-// 			return ;
-// 	}
-// 	else if (temp->type == RDR_RD_IN)
-// 	{
-// 		data->check_in = true;
-// 		read_stdin(temp->command, temp_i);
-// 	}
-// 	else if (temp->type == PIPE)
-// 	{
-// 		check_pipe = true;
-// 		command[i] = NULL;
-// 		command = exec_pipe(data,command,temp_i,temp_o,len);
-// 		close(temp->fd_out);
-// 		i = 0;
-// 	}
-// }
-
 int	len_tokens(t_tokens *head)
 {
 	int	res;
@@ -286,63 +261,69 @@ int	len_tokens(t_tokens *head)
 	return (res);
 }
 
+bool	choose_redirect(int *i,
+	char **command, t_tokens *temp, t_data *data)
+{
+	if (temp->type == NORMAL)
+		command[(*i)++] = ft_mllstrcpy(temp->command);
+	else if (temp->type == RDR_OUT || temp->type == RDR_AP_OUT)
+	{
+		data->check_out = true;
+		temp->fd_out = change_stdout(temp->command, temp->type);
+	}
+	else if (temp->type == RDR_IN)
+	{
+		data->check_in = true;
+		if (!change_stdin(temp->command))
+			return (false);
+	}
+	else if (temp->type == RDR_RD_IN)
+	{
+		data->check_in = true;
+		read_stdin(temp->command, data->fd_in);
+	}
+	else if (temp->type == PIPE)
+	{
+		data->check_pipe = true;
+		command = exec_pipe(data, command, len_tokens(data->tokens_head), i);
+		(*i) = 0;
+	}
+	return (true);
+}
+
+void	last_fd(t_data *data)
+{
+	int	fd_temp;
+
+	dup2(data->fd_in, STDIN_FILENO);
+	fd_temp = open(TEMP_FILE_OUT, O_RDONLY);
+	if (fd_temp == -1)
+		fd_temp = open(TEMP_FILE_OUT, O_CREAT | O_RDONLY);
+	dup2(fd_temp, STDIN_FILENO);
+}
+
 void	exec_tokens(t_data *data)
 {
 	char		**command;
 	int			len;
 	t_tokens	*temp;
 	int			i;
-	pid_t		pid;
-	int			fd;
-	bool		check_pipe;
-	int			fd_temp;
 
 	i = 0;
-	check_pipe = false;
 	len = len_tokens(data->tokens_head);
 	command = malloc(sizeof(char *) * (len + 1));
 	temp = data->tokens_head;
 	while (temp)
 	{
-		// choose_redirect(temp_i,temp_o,data,temp,command);
-		if (temp->type == NORMAL)
-			command[i++] = ft_mllstrcpy(temp->command);
-		else if (temp->type == RDR_OUT || temp->type == RDR_AP_OUT)
-		{
-			data->check_out = true;
-			temp->fd_out = change_stdout(temp->command, temp->type);
-		}
-		else if (temp->type == RDR_IN)
-		{
-			data->check_in = true;
-			if (!change_stdin(temp->command))
-				return ;
-		}
-		else if (temp->type == RDR_RD_IN)
-		{
-			data->check_in = true;
-			read_stdin(temp->command, data->fd_in);
-		}
-		else if (temp->type == PIPE)
-		{
-			check_pipe = true;
-			command[i] = NULL;
-			command = exec_pipe(data,command,len);
-			i = 0;
-		}
+		if (!choose_redirect(&i, command, temp, data))
+			return ;
 		temp = temp->next;
 	}
 	command[i] = NULL;
 	if (!data->check_out)
 		dup2(data->fd_out, STDOUT_FILENO);
-	if (!data->check_in && check_pipe)
-	{
-		dup2(data->fd_in, STDIN_FILENO);
-		fd_temp = open(TEMP_FILE_OUT, O_RDONLY);
-		if (fd_temp == -1)
-			fd_temp = open(TEMP_FILE_OUT, O_CREAT | O_RDONLY);
-		dup2(fd_temp, STDIN_FILENO);
-	}
+	if (!data->check_in && data->check_pipe)
+		last_fd(data);
 	choose_exec(command, data);
 	unlink(TEMP_FILE_OUT);
 	unlink(TEMP_FILE);

@@ -77,6 +77,7 @@ t_data	*get_data(int ac, char **av, char **envp)
 		error(MALLOC, NULL);
 	temp_data->fd_out = dup(STDOUT_FILENO);
 	temp_data->fd_in = dup(STDIN_FILENO);
+	temp_data->check_pipe = false;
 	temp_data->envp = envp;
 	temp_data->stat_head = get_stat(ac, av);
 	temp_data->var_head = get_var(envp);

@@ -37,7 +37,7 @@ bool	change_stdin(char *str)
 	check_access = access(str, R_OK);
 	if (check_access == -1)
 	{
-		perror("minishell:");
+		perror("minishell");
 		g_exit_status = 1;
 		return (false);
 	}

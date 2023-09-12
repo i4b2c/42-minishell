@@ -66,6 +66,7 @@ typedef struct s_data
 {
 	int			fd_in;
 	int			fd_out;
+	bool		check_pipe;
 	char		**envp;
 	bool		check_out;
 	bool		check_in;
