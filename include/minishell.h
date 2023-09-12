@@ -64,6 +64,8 @@ typedef struct s_varlst
 
 typedef struct s_data
 {
+	int			fd_in;
+	int			fd_out;
 	char		**envp;
 	bool		check_out;
 	bool		check_in;

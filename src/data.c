@@ -75,6 +75,8 @@ t_data	*get_data(int ac, char **av, char **envp)
 	temp_data = (t_data *)malloc(sizeof(t_data));
 	if (!temp_data)
 		error(MALLOC, NULL);
+	temp_data->fd_out = dup(STDOUT_FILENO);
+	temp_data->fd_in = dup(STDIN_FILENO);
 	temp_data->envp = envp;
 	temp_data->stat_head = get_stat(ac, av);
 	temp_data->var_head = get_var(envp);
