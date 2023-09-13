@@ -48,10 +48,8 @@ void	add_list(t_data *data, t_varlst *temp_var)
 
 bool	is_there_quotes(char *str)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
+	int i = 0;
+	while(str[i])
 	{
 		if (str[i] == '\'' || str[i] == '"')
 			return (true);
@@ -63,9 +61,8 @@ bool	is_there_quotes(char *str)
 int	get_next_quote(char *str, int begin, char quote)
 {
 	int	i;
-
 	i = begin + 1;
-	while (str[i] && str[i] != quote)
+	while(str[i] && str[i] != quote)
 		i++;
 	if (str[i] == '\0')
 		return (-2);

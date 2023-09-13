@@ -29,8 +29,62 @@ int	search_envp(t_data *data, char *cmd)
 	return (0);
 }
 
+/*
+char	*clean_str(char *str)
+{
+	int i = -1;
+	int	quotes_num;
+	int	j;
+	char *temp;
+
+	while (str[++i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			quotes_num += 1;
+	}
+	//temp = malloc(sizeof(char) * i - quotes_num + 1);
+	i = -1;
+	j = 0;
+	while (str[++i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			i++;
+		if (!str[i])
+			break ;
+		temp[j] = str[i];
+		j++;
+	}
+	temp[j] = '\0';
+	return (temp);
+}
+
+void	final_quote_check(char *str)
+{
+	int i = 0;
+	int j = 0;
+	char *temp;
+	if (str[i] == '\'' || str[i] == '"')
+		return ;
+	while (str[i] && str[i] != '\'' && str[i] != '"')
+		i++;
+	if ((str[i] == '\'' && str[i + 1] == '"') || (str[i] == '"' && str[i + 1] == '\''))
+		i++;
+	else if (str[i] == '\'' || str[i] == '"')
+	{
+		str = clean_str(str);
+	}
+}
+*/
+
 void	exec_echo(t_data *data, char **input)
 {
+	// t_tokens *temp;
+
+	// temp = data->tokens_head;
+	// while(temp)
+	// {
+
+	// }
 	char	*temp;
 	int		i;
 
@@ -46,6 +100,8 @@ void	exec_echo(t_data *data, char **input)
 		}
 		else
 		{
+			//if (is_there_quotes(temp))
+				//final_quote_check(temp);
 			ft_printf("%s", temp);
 			if (input[i + 1])
 				write(STDOUT_FILENO, " ", 1);

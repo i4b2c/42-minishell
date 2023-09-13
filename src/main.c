@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/13 13:01:20 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/09 17:38:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ int	get_len_pipes(char *input)
 	while (input[i])
 	{
 		if (input[i] == '|')
-			len++;
-		else if(input[i] == '<' || input[i] == '<')
 			len++;
 		i++;
 	}
@@ -59,39 +57,13 @@ char	*new_input(char *input)
 	new_input = malloc(((get_len_pipes(input) * 2) + 1 + ft_strlen(input)) * sizeof(char));
 	while (input[i_input])
 	{
-		if((input[i_input] == '<' && input[i_input + 1] == '<' && !check_closed_quotes(input,i_input))
-			|| (input[i_input] == '>' && input[i_input + 1] == '>' && !check_closed_quotes(input,i_input)))
-		{
-			new_input[i_new] = ' ';
-			new_input[i_new + 1] = input[i_input];
-			new_input[i_new + 2] = input[i_input];
-			new_input[i_new + 3] = ' ';
-			i_input++;
-			i_new += 3;
-		}
-		else if ((input[i_input] == '|' && !check_closed_quotes(input,i_input))
-			|| (input[i_input] == '>' && !check_closed_quotes(input,i_input))
-			|| (input[i_input] == '<' && !check_closed_quotes(input,i_input)))
+		if (input[i_input] == '|' && !check_closed_quotes(input,i_input))
 		{
 			new_input[i_new] = ' ';
 			new_input[i_new + 1] = input[i_input];
 			new_input[i_new + 2] = ' ';
 			i_new += 2;
 		}
-		// else if (input[i_input] == '<' && !check_closed_quotes(input,i_input))
-		// {
-		// 	new_input[i_new] = ' ';
-		// 	new_input[i_new + 1] = input[i_input];
-		// 	new_input[i_new + 2] = ' ';
-		// 	i_new += 2;
-		// }
-		// else if (input[i_input] == '>' && !check_closed_quotes(input,i_input))
-		// {
-		// 	new_input[i_new] = ' ';
-		// 	new_input[i_new + 1] = input[i_input];
-		// 	new_input[i_new + 2] = ' ';
-		// 	i_new += 2;
-		// }
 		else
 			new_input[i_new] = input[i_input];
 		i_new++;
@@ -244,8 +216,20 @@ char	**split_input(char *input, t_data *data)
 			token_count++;
 		}
 	}
+	//printf("%s\n", tokens[0]);
 	tokens[token_count] = NULL;
 	return (cut_quote(tokens,data));
+}
+
+//apenas para teste
+void print_tokens(t_data *data)
+{
+	t_tokens *temp = data->tokens_head;
+	while(temp)
+	{
+		printf("%s -> %d\n",temp->command,temp->type);
+		temp = temp->next;
+	}
 }
 
 long long int	ft_atoll(const char *str)
@@ -312,6 +296,7 @@ int	main(int ac, char **av, char **envp)
 	char	*input;
 	int		temp_stdout;
 	int		temp_stdin;
+	//char	**input_split;
 
 	if (ac > 1 && av)
 		error(ARGS, '\0');
@@ -331,7 +316,10 @@ int	main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 			input = new_input(input);
+			//input_split = split_input(input, data);
 			data->tokens_head = get_tokens(data, input);
+			// print_tokens(data);
+			//printf("first token ->%s\n", data->tokens_head->command); //-- confirma que o primeiro comando está com bug
 			if(!strncmp(data->tokens_head->command, "exit", 4))
 			{
 				if(len_data(data->tokens_head) > 2)
@@ -360,8 +348,6 @@ int	main(int ac, char **av, char **envp)
 				}
 			}
 			exec_tokens(data);
-			data->check_in = false;
-			data->check_out = false;
 			unlink(TEMP_FILE);
 			free_tokens(data);
 		}

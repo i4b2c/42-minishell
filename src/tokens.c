@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 16:16:58 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/12 17:19:31 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/08 19:09:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,20 +151,20 @@ void	add_token(t_tokens **head, char *str, t_type type)
 
 int add_token(t_tokens **head, char *str,t_type type)
 {
-	t_tokens *new_token;
+    t_tokens *new_token;
 	t_tokens *temp;
 
 	new_token = malloc(sizeof(t_tokens));
-	if (!new_token)
-		return (-1);
+    if (!new_token)
+        return (-1);
 	if(!str)
 		new_token->command = NULL;
 	else
-		new_token->command = ft_strdup(str); //tambem dá com ft_strdup
+    	new_token->command = ft_strdup(str); //tambem dá com ft_strdup
 	new_token->type = type;
-	new_token->next = NULL;
-	if (!(*head))
-		*head = new_token;
+    new_token->next = NULL;
+    if (!*head)
+        *head = new_token;
 	else
 	{
 		temp = *head;
@@ -172,6 +172,7 @@ int add_token(t_tokens **head, char *str,t_type type)
 			temp = temp->next;
 		temp->next = new_token;
 	}
+	//printf("token ->%s\n", new_token->command);
 	return (0);
 }
 //RDR_RD_IN
@@ -204,7 +205,6 @@ int	get_word_until(char *str, int i, t_tokens **head)
 {
 	int	begin;
 	int	checker;
-	char *temp;
 
 	begin = i;
 	while (str[i])
@@ -217,9 +217,7 @@ int	get_word_until(char *str, int i, t_tokens **head)
 			i = get_next_quote(str, i, '"');
 		i++;
 	}
-	temp = ft_substr(str, begin, i - begin);
-	checker = add_token(head, temp, NORMAL);
-	free(temp);
+	checker = add_token(head, ft_substr(str, begin, i - begin), NORMAL);
 	if (checker == (-1))
 		return (checker);
 	return (i);
@@ -422,11 +420,15 @@ t_tokens	*get_tokens(t_data *data, char *str)
 	{
 		while(str[i] == ' ' || str[i] == '\t')
 			i++;
+		// if (is_there_token(str[i]) != NORMAL)
+		// 	i = get_new_token(str, i, &data->tokens_head);
+		// else
 		i = get_word_until(str, i, &data->tokens_head);
 		if (i < 0)
 			return (NULL);
 		else if (str[i] == '\0')
 			break ;
+		//remove_head_quotes(data->tokens_head); //remove the quotes only from the first token(command)
 		i++;
 	}
 	remove_quotes(data->tokens_head,data); //remove the quotes from all the tokens(commands)
@@ -441,7 +443,76 @@ t_tokens	*get_tokens(t_data *data, char *str)
 			add_token(&temp,temp2->command,temp2->type);
 		temp2 = temp2->next;
 	}
-	// add_token(&temp,NULL,NORMAL);
 	add_token(&temp,temp2->command,temp2->type);
 	return (temp);
 }
+
+
+
+/*
+void	add_token(t_tokens **head, char *str, t_type type)
+{
+	t_tokens	*new_token;
+	t_tokens	*temp;
+
+	new_token = malloc(sizeof(t_tokens));
+	if (!new_token)
+		return ;
+	new_token->command = ft_mllstrcpy(str);
+	new_token->type = type;
+	new_token->next = NULL;
+	if (!*head)
+		*head = new_token;
+	else
+	{
+		temp = *head;
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new_token;
+	}
+	printf("tokens ->%s\n", new_token->command);
+}
+
+t_tokens	*tokens_input(char **command, t_data *data)
+{
+	t_tokens	*temp;
+	t_type		type;
+	char		**split_pipe;
+	int			i;
+
+	i = 0;
+	temp = NULL;
+	type = NORMAL;
+	while (command[i])
+	{
+		if (!ft_strchr(command[i], '>')
+			&& !ft_strchr(command[i], '<'))
+		{
+			if (ft_strchr(command[i], '|'))
+			{
+				add_token(&temp, "|", PIPE);
+				type = NORMAL;
+			}
+			else
+				add_token(&temp, command[i], type);
+			type = NORMAL;
+			i++;
+		}
+		else
+		{
+			if (!ft_strncmp(command[i], ">>", 3))
+				type = RDR_AP_OUT;
+			else if (!ft_strncmp(command[i], "<<", 3))
+				type = RDR_RD_IN;
+			else if (ft_strchr(command[i], '>'))
+				type = RDR_OUT;
+			else if (ft_strchr(command[i], '<'))
+				type = RDR_IN;
+			i++;
+		}
+	}
+	free_strings(command);
+	return (temp);
+}
+*/
+
