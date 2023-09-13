@@ -31,16 +31,16 @@ void	print_string(char **str)
 		ft_printf("%s\n", str[i++]);
 }
 
-char check_quote(char *str)
+char	check_quote(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (str[i] == '\'' || str[i] == '"')
-			break;
+			break ;
 		i++;
 	}
-	return str[i];
+	return (str[i]);
 }

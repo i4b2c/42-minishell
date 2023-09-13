@@ -12,19 +12,19 @@
 
 #include "../include/minishell.h"
 
-extern volatile long long g_exit_status;
+extern volatile long long	g_exit_status;
 
-bool check_extra_chdir(char *str)
+bool	check_extra_chdir(char *str)
 {
-	char **temp;
-	int len;
+	char	**temp;
+	int		len;
 
-	temp = ft_split(str,' ');
+	temp = ft_split(str, ' ');
 	len = len_strings(temp);
 	free_strings(temp);
-	if(len > 1)
-		return true;
-	return false;
+	if (len > 1)
+		return (true);
+	return (false);
 }
 
 void	exec_chdir(char **input)
