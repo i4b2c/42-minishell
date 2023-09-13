@@ -6,13 +6,13 @@
 /*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 16:16:58 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/12 17:19:31 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/13 16:03:10 by icaldas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-extern volatile long long g_exit_status;
+extern volatile long long	g_exit_status;
 
 int	get_unquoted_size(char *str, char quote)
 {
@@ -28,26 +28,22 @@ int	get_unquoted_size(char *str, char quote)
 		i++;
 	}
 	return (len);
-
 }
-
 
 char	*cut_quotes_teste(char *input)
 {
-	int len;
-	char *output;
-	int output_index;
-	bool inside_single_quotes;
-	bool inside_double_quotes;
-	int i;
+	char	*output;
+	int		output_index;
+	bool	inside_single_quotes;
+	bool	inside_double_quotes;
+	int		i;
 
 	inside_double_quotes = false;
 	inside_single_quotes = false;
 	output_index = 0;
-	len = ft_strlen(input);
-	output = malloc(len + 1);
+	output = malloc(ft_strlen(input) + 1);
 	i = -1;
-	while(++i < len)
+	while (++i < ft_strlen(input))
 	{
 		if (input[i] == '\'' && !inside_double_quotes)
 			inside_single_quotes = !inside_single_quotes;
@@ -60,17 +56,16 @@ char	*cut_quotes_teste(char *input)
 	return (output);
 }
 
-
 char	*remove_single_quotes(char *str)
 {
-	int i;
-	int j;
-	char * quotes_free;
+	int		i;
+	int		j;
+	char	*quotes_free;
+	int		size;
 
 	i = 0;
 	j = 0;
-	int size = get_unquoted_size(str, '\'');
-	//printf("%d\n", size);
+	size = get_unquoted_size(str, '\'');
 	quotes_free = malloc(sizeof(char) * size + 1);
 	while (str[i])
 	{
@@ -86,19 +81,16 @@ char	*remove_single_quotes(char *str)
 	return (quotes_free);
 }
 
-//removes all the double quotes from the input(str)
-//returns the quote_free str malloced
-
 char	*remove_double_quotes(char *str)
 {
-	int i;
-	int j;
-	char *quotes_free;
+	int		i;
+	int		j;
+	char	*quotes_free;
+	int		size;
 
 	i = 0;
 	j = 0;
-	int size = get_unquoted_size(str, '"');
-	//printf("%d\n", size);
+	size = get_unquoted_size(str, '"');
 	quotes_free = malloc(sizeof(char) * size + 1);
 	while (str[i])
 	{
@@ -124,43 +116,19 @@ t_type	is_there_token(char c)
 		return (PIPE);
 	return (NORMAL);
 }
-/*
-void	add_token(t_tokens **head, char *str, t_type type)
+
+int	add_token(t_tokens **head, char *str, t_type type)
 {
 	t_tokens	*new_token;
 	t_tokens	*temp;
 
 	new_token = malloc(sizeof(t_tokens));
 	if (!new_token)
-		return ;
-	new_token->command = ft_mllstrcpy(str);
-	new_token->type = type;
-	new_token->next = NULL;
-	if (!*head)
-		*head = new_token;
-	else
-	{
-		temp = *head;
-		while (temp->next)
-			temp = temp->next;
-		temp->next = new_token;
-	}
-	printf("tokens ->%s\n", new_token->command);
-}
-*/
-
-int add_token(t_tokens **head, char *str,t_type type)
-{
-	t_tokens *new_token;
-	t_tokens *temp;
-
-	new_token = malloc(sizeof(t_tokens));
-	if (!new_token)
 		return (-1);
-	if(!str)
+	if (!str)
 		new_token->command = NULL;
 	else
-		new_token->command = ft_strdup(str); //tambem dá com ft_strdup
+		new_token->command = ft_strdup(str);
 	new_token->type = type;
 	new_token->next = NULL;
 	if (!(*head))
@@ -174,10 +142,10 @@ int add_token(t_tokens **head, char *str,t_type type)
 	}
 	return (0);
 }
-//RDR_RD_IN
+
 int	get_new_token(char *str, int i, t_tokens **head)
 {
-	int checker;
+	int	checker;
 
 	if (str[i] == '<' && str[i + 1] == '<')
 	{
@@ -202,9 +170,9 @@ int	get_new_token(char *str, int i, t_tokens **head)
 
 int	get_word_until(char *str, int i, t_tokens **head)
 {
-	int	begin;
-	int	checker;
-	char *temp;
+	int		begin;
+	int		checker;
+	char	*temp;
 
 	begin = i;
 	while (str[i])
@@ -246,6 +214,7 @@ char	*get_path(char *input, int *i)
 	temp[len] = '\0';
 	return (temp);
 }
+
 int	get_len_path(char *input, t_data *data)
 {
 	int		len;
@@ -272,14 +241,15 @@ int	get_len_path(char *input, t_data *data)
 	return (len + 1);
 }
 
-
 char	*get_path_input(char *input, t_data *data)
 {
-    int		i;
+	int		i;
 	int		len;
 	int		i_temp;
 	char	*temp_path;
 	char	*temp_input;
+	char	*temp_int;
+	int		i_int_temp;
 
 	i = 0;
 	len = get_len_path(input, data);
@@ -287,23 +257,21 @@ char	*get_path_input(char *input, t_data *data)
 	len = 0;
 	while (input[i])
 	{
-		if(input[i] == '$' && input[i+1] == '?'
+		if (input[i] == '$' && input[i + 1] == '?'
 			&& input[0] != '\'')
+		{
+			i_int_temp = 0;
+			temp_int = ft_itoa(g_exit_status);
+			while (temp_int[i_int_temp])
 			{
-				char *temp_int;
-				int i_int_temp = 0;
-
-				temp_int = ft_itoa(g_exit_status);
-				while(temp_int[i_int_temp])
-				{
-					temp_input[len] = temp_int[i_int_temp];
-					i_int_temp++;
-					len++;
-				}
-				i += 2;
-				free(temp_int);
+				temp_input[len] = temp_int[i_int_temp];
+				i_int_temp++;
+				len++;
 			}
-		else if(input[i] == '$' && !ft_isalnum(input[i+1]))
+			i += 2;
+			free(temp_int);
+		}
+		else if (input[i] == '$' && !ft_isalnum(input[i + 1]))
 		{
 			temp_input[len++] = '$';
 			i++;
@@ -332,8 +300,7 @@ char	*get_path_input(char *input, t_data *data)
 	return (temp_input);
 }
 
-
-void	remove_head_quotes(t_tokens *head,t_data *data)
+void	remove_head_quotes(t_tokens *head, t_data *data)
 {
 	if (is_there_quotes(head->command))
 	{
@@ -341,7 +308,7 @@ void	remove_head_quotes(t_tokens *head,t_data *data)
 			head->command = remove_single_quotes(head->command);
 		else if (head->command[0] == '"')
 		{
-			head->command = get_path_input(head->command,data);
+			head->command = get_path_input(head->command, data);
 			head->command = remove_double_quotes(head->command);
 		}
 	}
@@ -349,65 +316,59 @@ void	remove_head_quotes(t_tokens *head,t_data *data)
 		return ;
 }
 
-void	remove_quotes(t_tokens *head,t_data *data)
+void	remove_quotes(t_tokens *head, t_data *data)
 {
 	while (head != NULL)
 	{
-		if(head->command[0] != '\'')
-			head->command = get_path_input(head->command,data);
-		//mesmo se nao tiver quotes a funcao funciona , se caso n tiver quotes
-		//ele simplesmente nao muda nada na string
+		if (head->command[0] != '\'')
+			head->command = get_path_input(head->command, data);
 		head->command = cut_quotes_teste(head->command);
 		head = head->next;
 	}
 }
 
-void remove_node(t_tokens **head, t_tokens *node_to_remove)
+void	remove_node(t_tokens **head, t_tokens *node_to_remove)
 {
-    if (*head == NULL || node_to_remove == NULL)
-        return; // Verificar se a lista ou o nó para remover são nulos
+	t_tokens	*prev;
 
-    if (*head == node_to_remove)
-    {
-        // Se o nó a ser removido é o primeiro nó da lista
-        *head = (*head)->next; // Atualize o ponteiro da cabeça para o próximo nó
-        free(node_to_remove);  // Libere a memória do nó removido
-        return;
-    }
-
-    // Encontre o nó anterior ao nó a ser removido
-    t_tokens *prev = *head;
-    while (prev->next != NULL && prev->next != node_to_remove)
-    {
-        prev = prev->next;
-    }
-
-    // Se o nó a ser removido foi encontrado, ajuste os ponteiros
-    if (prev->next == node_to_remove)
-    {
-        prev->next = node_to_remove->next; // Atualize o ponteiro "next" do nó anterior
-        free(node_to_remove);              // Libere a memória do nó removido
-    }
+	if (*head == NULL || node_to_remove == NULL)
+		return ;
+	if (*head == node_to_remove)
+	{
+		*head = (*head)->next;
+		free(node_to_remove);
+		return ;
+	}
+	prev = *head;
+	while (prev->next != NULL && prev->next != node_to_remove)
+		prev = prev->next;
+	if (prev->next == node_to_remove)
+	{
+		prev->next = node_to_remove->next;
+		free(node_to_remove);
+	}
 }
 
-void get_type_input(t_tokens *temp)
+void	get_type_input(t_tokens *temp)
 {
-	t_type type_temp;
-	int len_string;
+	t_type	type_temp;
+	int		len_string;
 
-	while(temp)
+	while (temp)
 	{
 		type_temp = NORMAL;
 		len_string = ft_strlen(temp->command);
-		if(temp->command[0] == '<' && temp->command[1] == '<' && len_string == 2)
+		if (temp->command[0] == '<'
+			&& temp->command[1] == '<' && len_string == 2)
 			temp->next->type = RDR_RD_IN;
-		else if(temp->command[0] == '<' && len_string == 1)
+		else if (temp->command[0] == '<' && len_string == 1)
 			temp->next->type = RDR_IN;
-		else if(temp->command[0] == '>' && len_string == 1)
+		else if (temp->command[0] == '>' && len_string == 1)
 			temp->next->type = RDR_OUT;
-		else if(temp->command[0] == '>' && temp->command[1] == '>' && len_string == 2)
+		else if (temp->command[0] == '>'
+			&& temp->command[1] == '>' && len_string == 2)
 			temp->next->type = RDR_AP_OUT;
-		else if(temp->command[0] == '|' && len_string == 1)
+		else if (temp->command[0] == '|' && len_string == 1)
 			temp->type = PIPE;
 		temp = temp->next;
 	}
@@ -415,12 +376,14 @@ void get_type_input(t_tokens *temp)
 
 t_tokens	*get_tokens(t_data *data, char *str)
 {
-	int	i;
+	int			i;
+	t_tokens	*temp;
+	t_tokens	*temp2;
 
 	i = 0;
 	while (str[i])
 	{
-		while(str[i] == ' ' || str[i] == '\t')
+		while (str[i] == ' ' || str[i] == '\t')
 			i++;
 		i = get_word_until(str, i, &data->tokens_head);
 		if (i < 0)
@@ -429,19 +392,16 @@ t_tokens	*get_tokens(t_data *data, char *str)
 			break ;
 		i++;
 	}
-	remove_quotes(data->tokens_head,data); //remove the quotes from all the tokens(commands)
+	remove_quotes(data->tokens_head, data);
 	get_type_input(data->tokens_head);
-	t_tokens *temp = NULL;
-	t_tokens *temp2;
-
+	temp = NULL;
 	temp2 = data->tokens_head;
-	while(temp2->next)
+	while (temp2->next)
 	{
-		if(temp2->next->type == NORMAL || temp2->next->type == PIPE)
-			add_token(&temp,temp2->command,temp2->type);
+		if (temp2->next->type == NORMAL || temp2->next->type == PIPE)
+			add_token(&temp, temp2->command, temp2->type);
 		temp2 = temp2->next;
 	}
-	// add_token(&temp,NULL,NORMAL);
-	add_token(&temp,temp2->command,temp2->type);
+	add_token(&temp, temp2->command, temp2->type);
 	return (temp);
 }
