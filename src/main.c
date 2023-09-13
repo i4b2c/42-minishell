@@ -6,7 +6,7 @@
 /*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/12 18:09:52 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/13 13:01:20 by icaldas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,6 +360,8 @@ int	main(int ac, char **av, char **envp)
 				}
 			}
 			exec_tokens(data);
+			data->check_in = false;
+			data->check_out = false;
 			unlink(TEMP_FILE);
 			free_tokens(data);
 		}

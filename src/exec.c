@@ -6,7 +6,7 @@
 /*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:28:11 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/06 14:28:11 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/13 12:59:35 by icaldas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ bool	choose_redirect(int *i,
 	else if (temp->type == PIPE)
 	{
 		data->check_pipe = true;
-		command = exec_pipe(data, command, len_tokens(data->tokens_head), i);
+		command = exec_pipe(data, command, len_tokens(data->tokens_head), *i);
 		(*i) = 0;
 	}
 	return (true);
