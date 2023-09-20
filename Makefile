@@ -34,29 +34,43 @@ LIBFT = libft/
 
 #ARQUIVOS
 LIBFT_A = libft/libft.a
-SRCS =	$(SRC_DIR)/data.c\
-		$(SRC_DIR)/envp.c \
-		$(SRC_DIR)/free.c \
-		$(SRC_DIR)/input.c \
-		$(SRC_DIR)/exec.c \
-		$(SRC_DIR)/export.c \
-		$(SRC_DIR)/signal.c \
-		$(SRC_DIR)/chdir.c \
-		$(SRC_DIR)/util_string.c \
-		$(SRC_DIR)/util_envp.c \
-		$(SRC_DIR)/util.c \
-		$(SRC_DIR)/error.c \
-		$(SRC_DIR)/echo.c \
-		$(SRC_DIR)/unset.c \
-		$(SRC_DIR)/redirect.c \
-		$(SRC_DIR)/tokens.c
+SRCS =	$(SRC_DIR)/chdir/chdir.c\
+		$(SRC_DIR)/data/data.c\
+		$(SRC_DIR)/echo/echo.c\
+		$(SRC_DIR)/envp/envp.c\
+		$(SRC_DIR)/envp/util.c\
+		$(SRC_DIR)/error/error.c\
+		$(SRC_DIR)/exec/error.c\
+		$(SRC_DIR)/exec/exec.c\
+		$(SRC_DIR)/exec/util.c\
+		$(SRC_DIR)/exec/util2.c\
+		$(SRC_DIR)/exit/exit.c\
+		$(SRC_DIR)/export/export.c\
+		$(SRC_DIR)/free/free.c\
+		$(SRC_DIR)/input/input.c\
+		$(SRC_DIR)/input/util.c\
+		$(SRC_DIR)/input/util2.c\
+		$(SRC_DIR)/path/path.c\
+		$(SRC_DIR)/redirect/redi.c\
+		$(SRC_DIR)/signal/signal.c\
+		$(SRC_DIR)/tokens/remove.c\
+		$(SRC_DIR)/tokens/tokens.c\
+		$(SRC_DIR)/tokens/util.c\
+		$(SRC_DIR)/tokens/util2.c\
+		$(SRC_DIR)/tokens/util3.c\
+		$(SRC_DIR)/unset/unset.c\
+		$(SRC_DIR)/utils/check.c\
+		$(SRC_DIR)/utils/util_len.c\
+		$(SRC_DIR)/utils/util_str.c\
+		$(SRC_DIR)/utils/util.c\
+
 
 #ARQUIVOS .o
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
+
 #MAIN
 MAIN = $(SRC_DIR)/main.c
-#$(SRC_DIR)/readline.c
 
 #COMANDOS
 CC = cc
@@ -71,33 +85,34 @@ OUTPUT = -o
 all: $(NAME)
 
 libft_compile:
-	@echo $(AMARELO)"Compilando\tlibft     " $(<:src/%=%) $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(AMARELO)"Compilando\t   libft     " $(<:src/%=%) $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@make -C $(LIBFT) --silent
-	@echo $(VERDE)"Libft compilado     " $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(VERDE)"Libft compilado     " $(BRANCO) "\t\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 
 libft_clean:
-	@echo $(VERMELHO)"Removendo objetos libft\t" $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(VERMELHO)"Removendo objetos libft\t" $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@make clean -C $(LIBFT) --silent
 
 libft_fclean:
-	@echo $(VERMELHO)"Removendo binario libft"$(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(VERMELHO)"Removendo binario libft"$(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@make fclean -C $(LIBFT) --silent
 
 $(NAME): $(OBJS) libft_compile
-	@echo $(VERDE)"Criando executavel minishell" $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(VERDE)"Criando executavel minishell" $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@$(CC) $(MAIN) $(OBJS) $(LIBFT_A) $(FLAGS) $(OUTPUT) $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(MKDIR) $(OBJ_DIR)
-	@echo $(AMARELO)"Compilando     " $(<:src/%=%) $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@$(MKDIR) $(dir $@)
+	@echo $(AMARELO)"Compilando        " $(<:$(SRC_DIR)/%=%) $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@$(CC) -c $< -o $@
 
+
 clean:	libft_clean
-	@echo $(VERMELHO)"Removendo objetos\t" $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(VERMELHO)"Removendo objetos\t" $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@$(RM) $(OBJ_DIR)/*.o
 
 fclean: clean libft_fclean
-	@echo $(VERMELHO)"Removendo executavel philo"$(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
+	@echo $(VERMELHO)"Removendo executavel minishell"$(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
 	@$(RM) $(NAME)
 	@$(RM) -rf $(OBJ_DIR)
 

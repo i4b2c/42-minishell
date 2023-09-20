@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 int	num_data_env(t_data *data)
 {
@@ -33,24 +33,11 @@ char	*copy_var(t_varlst *temp)
 	int		len_value;
 	char	*temp_envp;
 
-	len_var = 0;
-	len_value = 0;
-	while (temp->var_name[len_var])
-		len_var++;
-	if (temp->var_value)
-	{
-		while (temp->var_value[len_value])
-			len_value++;
-	}
-	else
-		len_value = 0;
-	temp_envp = malloc(sizeof(char) * (len_var + len_value + 2));
-	len_var = 0;
-	while (temp->var_name[len_var])
-	{
+	len_value = ft_strlen(temp->var_value);
+	temp_envp = malloc((ft_strlen(temp->var_name) + len_value + 2));
+	len_var = -1;
+	while (temp->var_name[++len_var])
 		temp_envp[len_var] = temp->var_name[len_var];
-		len_var++;
-	}
 	if (!temp->var_value)
 	{
 		temp_envp[len_var] = 0;
@@ -62,12 +49,9 @@ char	*copy_var(t_varlst *temp)
 		temp_envp[len_var + 1] = 0;
 		return (temp_envp);
 	}
-	len_value = 0;
-	while (temp->var_value[len_value])
-	{
+	len_value = -1;
+	while (temp->var_value[++len_value])
 		temp_envp[len_value + 1 + len_var] = temp->var_value[len_value];
-		len_value++;
-	}
 	temp_envp[len_value + 1 + len_var] = 0;
 	return (temp_envp);
 }

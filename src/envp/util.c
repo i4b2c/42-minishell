@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util_envp.c                                        :+:      :+:    :+:   */
+/*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/06 16:20:37 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/06 16:20:37 by icaldas          ###   ########.fr       */
+/*   Created: 2023/09/20 13:10:24 by marvin            #+#    #+#             */
+/*   Updated: 2023/09/20 13:10:24 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 void	print_env(t_data *data)
 {

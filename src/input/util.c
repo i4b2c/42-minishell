@@ -1,36 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input.c                                            :+:      :+:    :+:   */
+/*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/06 14:50:34 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/06 14:50:34 by icaldas          ###   ########.fr       */
+/*   Created: 2023/09/20 13:04:39 by marvin            #+#    #+#             */
+/*   Updated: 2023/09/20 13:04:39 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-
-char	*get_input(void)
-{
-	char	*input;
-	char	*temp;
-
-	temp = readline("\033[0;32mminishell $>\033[0m ");
-	input = ft_strtrim(temp, " \t");
-	free(temp);
-	return (input);
-}
-
-bool	check_pipes(char *str, int i)
-{
-	if (str[0] == '|' || str[ft_strlen(str) - 1] == '|')
-		return (error("unexpected token", '|'));
-	if (str[i] == '|' && str[i + 1] == '|')
-		return (error("unexpected token", '|'));
-	return (true);
-}
+#include "../../include/minishell.h"
 
 bool	invalid_operator(char *str, int i)
 {
@@ -80,26 +60,22 @@ bool	check_quotes(char *str)
 	return (true);
 }
 
-bool	check_input(char *str)
+void	change_double_input(char *new_input,
+	char *input, int *i_new, int *i_input)
 {
-	int	i;
+	new_input[*i_new] = ' ';
+	new_input[(*i_new) + 1] = input[*i_input];
+	new_input[(*i_new) + 2] = input[*i_input];
+	new_input[(*i_new) + 3] = ' ';
+	(*i_input)++;
+	(*i_new) += 3;
+}
 
-	i = 0;
-	if (!check_quotes(str))
-		return (false);
-	while (str[i])
-	{
-		if (str[i] == '\'')
-			i = get_next_quote(str, i, '\'');
-		else if (str[i] == '"')
-			i = get_next_quote(str, i, '"');
-		else
-		{
-			if (!check_redirect(str, i)
-				|| !check_pipes(str, i) || !invalid_operator(str, i))
-				return (false);
-		}
-		i++;
-	}
-	return (true);
+void	change_simple_input(char *new_input,
+	char *input, int *i_new, int i_input)
+{
+	new_input[(*i_new)] = ' ';
+	new_input[(*i_new) + 1] = input[i_input];
+	new_input[(*i_new) + 2] = ' ';
+	(*i_new) += 2;
 }

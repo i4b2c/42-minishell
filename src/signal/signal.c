@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 extern volatile long long	g_exit_status;
 
@@ -46,4 +46,15 @@ void	init_signal(void)
 	sigaddset(&sa.sa_mask, SIGINT);
 	sigaction(SIGINT, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	cntr_d(char *input, t_data **data)
+{
+	if (!input)
+	{
+		rl_clear_history();
+		ft_putendl_fd("exit", STDOUT_FILENO);
+		free_data(data);
+		exit(EXIT_SUCCESS);
+	}
 }

@@ -1,25 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   util_string.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/06 14:27:19 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/06 14:27:19 by icaldas          ###   ########.fr       */
+/*   Created: 2023/09/06 16:20:57 by icaldas           #+#    #+#             */
+/*   Updated: 2023/09/06 16:20:57 by icaldas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-int	error(char *str, char str_extra)
+int	len_strings(char **cmd)
 {
-	write(2, str, ft_strlen(str));
-	if (str_extra)
+	int	i;
+
+	i = 0;
+	while (cmd[i])
+		i++;
+	return (i);
+}
+
+void	print_string(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		ft_printf("%s\n", str[i++]);
+}
+
+char	check_quote(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
 	{
-		write(2, " ", 1);
-		ft_putchar_fd(str_extra, STDERR_FILENO);
-		write(2, "\n", 1);
+		if (str[i] == '\'' || str[i] == '"')
+			break ;
+		i++;
 	}
-	return (false);
+	return (str[i]);
 }

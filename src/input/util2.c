@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   util2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/12 01:47:03 by marvin            #+#    #+#             */
-/*   Updated: 2023/08/12 01:47:03 by marvin           ###   ########.fr       */
+/*   Created: 2023/09/20 13:14:05 by marvin            #+#    #+#             */
+/*   Updated: 2023/09/20 13:14:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/minishell.h"
 
-int	ft_strlen(char *str)
+bool	check_input(char *str)
 {
 	int	i;
 
-	if (!str)
-		return (0);
 	i = 0;
+	if (!check_quotes(str))
+		return (false);
 	while (str[i])
+	{
+		if (str[i] == '\'')
+			i = get_next_quote(str, i, '\'');
+		else if (str[i] == '"')
+			i = get_next_quote(str, i, '"');
+		else
+		{
+			if (!check_redirect(str, i)
+				|| !check_pipes(str, i) || !invalid_operator(str, i))
+				return (false);
+		}
 		i++;
-	return (i);
+	}
+	return (true);
 }

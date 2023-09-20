@@ -1,46 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util_string.c                                      :+:      :+:    :+:   */
+/*   util_len.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/06 16:20:57 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/06 16:20:57 by icaldas          ###   ########.fr       */
+/*   Created: 2023/09/20 12:59:26 by marvin            #+#    #+#             */
+/*   Updated: 2023/09/20 12:59:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-int	len_strings(char **cmd)
+int	get_len_pipes(char *input)
 {
 	int	i;
+	int	len;
 
 	i = 0;
-	while (cmd[i])
-		i++;
-	return (i);
-}
-
-void	print_string(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		ft_printf("%s\n", str[i++]);
-}
-
-char	check_quote(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
+	len = 0;
+	while (input[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
-			break ;
+		if (input[i] == '|')
+			len++;
+		else if (input[i] == '<' || input[i] == '>')
+			len++;
 		i++;
 	}
-	return (str[i]);
+	return (len);
+}
+
+int	len_data(t_tokens *tokens)
+{
+	int	i;
+
+	i = 0;
+	while (tokens)
+	{
+		tokens = tokens->next;
+		i++;
+	}
+	return (i);
 }

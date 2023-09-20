@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 void	free_strings(char **str)
 {
@@ -19,7 +19,6 @@ void	free_strings(char **str)
 	i = 0;
 	while (str[i])
 		free(str[i++]);
-	free(str);
 }
 
 void	free_data(t_data **data)
@@ -27,6 +26,7 @@ void	free_data(t_data **data)
 	t_varlst	*temp_var;
 	t_statlst	*temp_stat;
 
+	free((*data)->input);
 	while ((*data)->var_head != NULL)
 	{
 		temp_var = (*data)->var_head->next;
@@ -41,7 +41,6 @@ void	free_data(t_data **data)
 		free((*data)->stat_head);
 		(*data)->stat_head = temp_stat;
 	}
-	free(*data);
 	*data = NULL;
 }
 

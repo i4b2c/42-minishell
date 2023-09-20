@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 char	*ft_mllstrcpy(char *str)
 {
@@ -30,55 +30,49 @@ char	*ft_mllstrcpy(char *str)
 	return (temp);
 }
 
-void	add_list(t_data *data, t_varlst *temp_var)
+long long int	ft_atoll(const char *str)
 {
-	t_varlst	*atual;
+	long long int			result;
+	int						sign;
 
-	atual = NULL;
-	if (data->var_head == NULL)
-		data->var_head = temp_var;
+	result = 0;
+	sign = 1;
+	while ((*str > 8 && *str < 14) || *str == 32)
+		str++;
+	if (*str == 45 || *str == 43)
+	{
+		if (*str == 45)
+			sign = -1;
+		str++;
+	}
+	while (*str > 47 && *str < 58)
+	{
+		result = result * 10 + (*str - 48);
+		str++;
+	}
+	return ((long long int)result * sign);
+}
+
+char	*ft_mllstrcat(char *str1, char *str2, char c)
+{
+	char	*temp;
+	int		i1;
+	int		i2;
+
+	if (!str1)
+		return (ft_mllstrcpy(str2));
+	if (!c)
+		temp = malloc(ft_strlen(str1) + ft_strlen(str2) + 1);
 	else
-	{
-		atual = data->var_head;
-		while (atual->next != NULL)
-			atual = atual->next;
-		atual->next = temp_var;
-	}
-}
-
-bool	is_there_quotes(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '"')
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-int	get_next_quote(char *str, int begin, char quote)
-{
-	int	i;
-
-	i = begin + 1;
-	while (str[i] && str[i] != quote)
-		i++;
-	if (str[i] == '\0')
-		return (-2);
-	return (i);
-}
-
-void	cntr_d(char *input, t_data **data)
-{
-	if (!input)
-	{
-		rl_clear_history();
-		ft_putendl_fd("exit", STDOUT_FILENO);
-		free_data(data);
-		exit(EXIT_SUCCESS);
-	}
+		temp = malloc(ft_strlen(str1) + ft_strlen(str2) + 2);
+	i1 = -1;
+	while (str1[++i1])
+		temp[i1] = str1[i1];
+	if (c)
+		temp[i1++] = c;
+	i2 = -1;
+	while (str2[++i2])
+		temp[i1 + i2] = str2[i2];
+	temp[i1 + i2] = 0;
+	return (temp);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 t_statlst	*get_stat(int ac, char **av)
 {
@@ -18,7 +18,7 @@ t_statlst	*get_stat(int ac, char **av)
 
 	temp_stat = malloc(sizeof(t_statlst));
 	if (!temp_stat)
-		error(MALLOC, NULL);
+		error(MALLOC, 0);
 	temp_stat->ac = ac;
 	temp_stat->av = av;
 	temp_stat->next = NULL;
@@ -47,10 +47,10 @@ t_varlst	*get_var(char **envp)
 	int			num_strings;
 	char		**var;
 
-	num_strings = 0;
+	num_strings = -1;
 	head_var = NULL;
 	temp_var = NULL;
-	while (envp[num_strings])
+	while (envp[++num_strings])
 	{
 		new_var = malloc(sizeof(t_varlst));
 		if (!new_var)
@@ -63,7 +63,7 @@ t_varlst	*get_var(char **envp)
 			new_var->var_value = ft_mllstrcpy(var[1]);
 		new_var->next = NULL;
 		add_var_list(&head_var, new_var, &temp_var);
-		num_strings++;
+		free_strings(var);
 	}
 	return (head_var);
 }
@@ -74,7 +74,7 @@ t_data	*get_data(int ac, char **av, char **envp)
 
 	temp_data = (t_data *)malloc(sizeof(t_data));
 	if (!temp_data)
-		error(MALLOC, NULL);
+		error(MALLOC, 0);
 	temp_data->fd_out = dup(STDOUT_FILENO);
 	temp_data->fd_in = dup(STDIN_FILENO);
 	temp_data->check_pipe = false;
@@ -84,5 +84,6 @@ t_data	*get_data(int ac, char **av, char **envp)
 	temp_data->check_out = false;
 	temp_data->check_in = false;
 	temp_data->tokens_head = NULL;
+	temp_data->input = NULL;
 	return (temp_data);
 }
