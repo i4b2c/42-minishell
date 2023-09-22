@@ -22,6 +22,35 @@ int	len_strings(char **cmd)
 	return (i);
 }
 
+void	print_export_value(char **str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (str[i])
+	{
+		j = 0;
+		write(STDOUT_FILENO, "declare -x ", 11);
+		while (str[i][j] && str[i][j] != '=')
+			write(STDOUT_FILENO, &str[i][j++], 1);
+		if (!str[i][j])
+		{
+			i++;
+			write(STDOUT_FILENO, "\n", 1);
+		}
+		else
+		{
+			write(STDOUT_FILENO, &str[i][j++], 1);
+			write(STDOUT_FILENO, "\"", 1);
+			while (str[i][j])
+				write(STDOUT_FILENO, &str[i][j++], 1);
+			write(STDOUT_FILENO, "\"\n", 2);
+			i++;
+		}
+	}
+}
+
 void	print_string(char **str)
 {
 	int	i;

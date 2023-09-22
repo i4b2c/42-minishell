@@ -184,6 +184,7 @@ int				get_len_pipes(char *input);
 int				len_data(t_tokens *tokens);
 int				len_strings(char **cmd);
 void			print_string(char **str);
+void			print_export_value(char **str);
 char			check_quote(char *str);
 char			*ft_mllstrcpy(char *str);
 long long int	ft_atoll(const char *str);

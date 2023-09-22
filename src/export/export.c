@@ -109,6 +109,6 @@ void	print_export(t_data *data)
 
 	temp_str = replicate_string(data);
 	sort_string(temp_str);
-	print_string(temp_str);
+	print_export_value(temp_str);
 	free_strings(temp_str);
 }
