@@ -24,7 +24,6 @@ void	free_strings(char **str)
 void	free_data(t_data **data)
 {
 	t_varlst	*temp_var;
-	t_statlst	*temp_stat;
 
 	free((*data)->input);
 	while ((*data)->var_head != NULL)
@@ -34,12 +33,6 @@ void	free_data(t_data **data)
 		free((*data)->var_head->var_value);
 		free((*data)->var_head);
 		(*data)->var_head = temp_var;
-	}
-	while ((*data)->stat_head != NULL)
-	{
-		temp_stat = (*data)->stat_head->next;
-		free((*data)->stat_head);
-		(*data)->stat_head = temp_stat;
 	}
 	*data = NULL;
 }

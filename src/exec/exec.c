@@ -30,7 +30,6 @@ void	ft_execve(char **command, t_data *data)
 		execve(check, command, data->envp);
 	if (!access(command[0], X_OK))
 		execve(command[0], command, data->envp);
-	free_strings(command);
 	dup2(STDOUT_FILENO, 1);
 	if (access(command[0], F_OK) == -1)
 		exit(error_nf(command));

@@ -12,19 +12,6 @@
 
 #include "../../include/minishell.h"
 
-t_statlst	*get_stat(int ac, char **av)
-{
-	t_statlst	*temp_stat;
-
-	temp_stat = malloc(sizeof(t_statlst));
-	if (!temp_stat)
-		error(MALLOC, 0);
-	temp_stat->ac = ac;
-	temp_stat->av = av;
-	temp_stat->next = NULL;
-	return (temp_stat);
-}
-
 void	add_var_list(t_varlst **head, t_varlst *new, t_varlst **temp)
 {
 	if (!(*head))
@@ -79,7 +66,6 @@ t_data	*get_data(int ac, char **av, char **envp)
 	temp_data->fd_in = dup(STDIN_FILENO);
 	temp_data->check_pipe = false;
 	temp_data->envp = envp;
-	temp_data->stat_head = get_stat(ac, av);
 	temp_data->var_head = get_var(envp);
 	temp_data->check_out = false;
 	temp_data->check_in = false;

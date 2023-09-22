@@ -59,13 +59,6 @@ typedef struct s_tokens
 	struct s_tokens	*next;
 }				t_tokens;
 
-typedef struct s_statlst
-{
-	int					ac;
-	char				**av;
-	struct s_statlst	*next;
-}				t_statlst;
-
 typedef struct s_varlst
 {
 	char			*var_name;
@@ -84,13 +77,11 @@ typedef struct s_data
 	bool		check_in;
 	t_tokens	*tokens_head;
 	t_varlst	*var_head;
-	t_statlst	*stat_head;
 }				t_data;
 
 bool			check_extra_chdir(char *str);
 void			exec_chdir(char **input);
 
-t_statlst		*get_stat(int ac, char **av);
 void			add_var_list(t_varlst **head, t_varlst *new, t_varlst **temp);
 t_varlst		*get_var(char **envp);
 t_data			*get_data(int ac, char **av, char **envp);
