@@ -24,7 +24,7 @@ int	change_stdout(char *str, t_type type)
 		fd = open(str, O_WRONLY | O_CREAT, 0666);
 	}
 	else if (type == RDR_AP_OUT)
-		fd = open(str, O_WRONLY | O_CREAT, 0666 | O_APPEND);
+		fd = open(str, O_WRONLY | O_APPEND | O_CREAT , 0666);
 	dup2(fd, STDOUT_FILENO);
 	return (fd);
 }
