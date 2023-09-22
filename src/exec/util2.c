@@ -48,7 +48,7 @@ char	*check_command(char *command, char **path)
 	return (NULL);
 }
 
-char	*ft_getenv(const char *str, t_data *data)
+char	*ft_getenv(char *str, t_data *data, bool op)
 {
 	t_varlst	*temp_var;
 
@@ -57,8 +57,14 @@ char	*ft_getenv(const char *str, t_data *data)
 	{
 		if (!strncmp(temp_var->var_name, str,
 				ft_strlen((char *)temp_var->var_name)))
+		{
+			if (op == true)
+				free(str);
 			return (ft_mllstrcpy(temp_var->var_value));
+		}
 		temp_var = temp_var->next;
 	}
+	if (op == true)
+		free(str);
 	return (ft_calloc(1, 1));
 }

@@ -125,7 +125,7 @@ int				is_quote(char c);
 char			*cut_quotes(char *input, char quote);
 int				pipe_string(t_tokens *tokens);
 char			*check_command(char *command, char **path);
-char			*ft_getenv(const char *str, t_data *data);
+char			*ft_getenv(char *str, t_data *data, bool op);
 
 void			check_exit(t_data *data);
 

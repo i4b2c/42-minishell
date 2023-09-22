@@ -54,7 +54,10 @@ void	execute_rdin(int fd, char *str)
 	{
 		input = readline("> ");
 		if (!ft_strncmp(input, str, ft_strlen(str)))
+		{
+			free(input);
 			break ;
+		}
 		else
 		{
 			write(fd, input, ft_strlen(input));

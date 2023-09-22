@@ -21,7 +21,7 @@ char	*get_path(char *input, int *i)
 	char	*temp;
 
 	i_temp = *i;
-	temp = malloc(sizeof(char) * (i_temp - *i + 1));
+	temp = malloc(sizeof(char) * (ft_strlen(input) - i_temp + 1));
 	len = 0;
 	(*i)++;
 	while (input[i_temp] && isalnum(input[i_temp]))
@@ -49,7 +49,7 @@ int	get_len_path(char *input, t_data *data)
 		if (input[i] == '$')
 		{
 			temp_path = get_path(input, &i);
-			temp_path = ft_getenv(temp_path, data);
+			temp_path = ft_getenv(temp_path, data, true);
 			len += ft_strlen(temp_path);
 			free(temp_path);
 		}
@@ -85,7 +85,7 @@ void	path_echo(t_data *data, char *temp_input, int *i, int *len)
 	char	*temp_path;
 
 	temp_path = get_path(data->input, i);
-	temp_path = ft_getenv(temp_path, data);
+	temp_path = ft_getenv(temp_path, data, true);
 	i_temp = 0;
 	while (temp_path[i_temp])
 	{
@@ -100,7 +100,6 @@ char	*get_path_input(char *input, t_data *data)
 {
 	int		i;
 	int		len;
-	int		i_temp;
 	char	*temp_input;
 
 	temp_input = malloc(sizeof(char) * get_len_path(input, data));
@@ -121,6 +120,7 @@ char	*get_path_input(char *input, t_data *data)
 		else
 			temp_input[len++] = input[i++];
 	}
+	free(input);
 	temp_input[len] = 0;
 	return (temp_input);
 }
