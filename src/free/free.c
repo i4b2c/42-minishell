@@ -25,7 +25,6 @@ void	free_data(t_data **data)
 {
 	t_varlst	*temp_var;
 
-	free((*data)->input);
 	while ((*data)->var_head != NULL)
 	{
 		temp_var = (*data)->var_head->next;
@@ -34,6 +33,8 @@ void	free_data(t_data **data)
 		free((*data)->var_head);
 		(*data)->var_head = temp_var;
 	}
+	free_tokens(*data);
+	free(*data);
 	*data = NULL;
 }
 

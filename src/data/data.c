@@ -37,11 +37,10 @@ t_varlst	*get_var(char **envp)
 	num_strings = -1;
 	head_var = NULL;
 	temp_var = NULL;
+	var = NULL;
 	while (envp[++num_strings])
 	{
 		new_var = malloc(sizeof(t_varlst));
-		if (!new_var)
-			error(MALLOC, 0);
 		var = ft_split(envp[num_strings], '=');
 		new_var->var_name = ft_mllstrcpy(var[0]);
 		if (!var[1])
@@ -51,6 +50,7 @@ t_varlst	*get_var(char **envp)
 		new_var->next = NULL;
 		add_var_list(&head_var, new_var, &temp_var);
 		free_strings(var);
+		free(var);
 	}
 	return (head_var);
 }

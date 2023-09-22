@@ -29,22 +29,18 @@ bool	choose_redirect(int *i,
 	char **command, t_tokens *temp, t_data *data)
 {
 	if (temp->type == NORMAL)
-		command[(*i)++] = ft_mllstrcpy(temp->command);
-	else if (temp->type == RDR_OUT || temp->type == RDR_AP_OUT)
 	{
-		data->check_out = true;
-		temp->fd_out = change_stdout(temp->command, temp->type);
+		if (command[*i] != NULL)
+			free(command[*i]);
+		command[(*i)++] = ft_mllstrcpy(temp->command);
 	}
+	else if (check_rd_in(data, temp))
+		return (true);
 	else if (temp->type == RDR_IN)
 	{
 		data->check_in = true;
 		if (!change_stdin(temp->command))
 			return (false);
-	}
-	else if (temp->type == RDR_RD_IN)
-	{
-		data->check_in = true;
-		read_stdin(temp->command, data->fd_in);
 	}
 	else if (temp->type == PIPE)
 	{

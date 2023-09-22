@@ -97,8 +97,6 @@ char	**exec_pipe(t_data *data, char **command, int len, int i)
 	}
 	data->check_in = false;
 	data->check_out = false;
-	free_strings(command);
-	command = malloc(sizeof(char *) * (len + 1));
 	return (command);
 }
 
@@ -111,7 +109,7 @@ void	exec_tokens(t_data *data)
 
 	i = 0;
 	len = len_tokens(data->tokens_head);
-	command = malloc(sizeof(char *) * (len + 1));
+	command = init_command(len);
 	temp = data->tokens_head;
 	while (temp)
 	{
@@ -125,6 +123,7 @@ void	exec_tokens(t_data *data)
 	if (!data->check_in && data->check_pipe)
 		last_fd(data);
 	choose_exec(command, data);
+	free_strings(command);
 	free(command);
 	unlink(TEMP_FILE_OUT);
 	unlink(TEMP_FILE);

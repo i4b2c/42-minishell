@@ -49,5 +49,4 @@ void	exec_unset(t_data *data, char **input)
 			temp_var = temp_var->next;
 		}
 	}
-	free_strings(input);
 }

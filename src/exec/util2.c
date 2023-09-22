@@ -68,3 +68,32 @@ char	*ft_getenv(char *str, t_data *data, bool op)
 		free(str);
 	return (ft_calloc(1, 1));
 }
+
+char	**init_command(int len)
+{
+	int		i;
+	char	**command;
+
+	i = 0;
+	command = malloc(sizeof(char *) * (len + 1));
+	while (i < len)
+		command[i++] = NULL;
+	return (command);
+}
+
+bool	check_rd_in(t_data *data, t_tokens *temp)
+{
+	if (temp->type == RDR_OUT || temp->type == RDR_AP_OUT)
+	{
+		data->check_out = true;
+		temp->fd_out = change_stdout(temp->command, temp->type);
+		return (true);
+	}
+	else if (temp->type == RDR_RD_IN)
+	{
+		data->check_in = true;
+		read_stdin(temp->command, data->fd_in);
+		return (true);
+	}
+	return (false);
+}

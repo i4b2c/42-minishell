@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 16:16:58 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/20 13:49:23 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/22 17:00:21 by icaldas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,27 @@ int	add_token(t_tokens **head, char *str, t_type type)
 	return (0);
 }
 
+t_tokens	*final_tokens(t_data *data)
+{
+	t_tokens	*temp2;
+	t_tokens	*temp;
+
+	temp = NULL;
+	temp2 = data->tokens_head;
+	while (temp2->next)
+	{
+		if (temp2->next->type == NORMAL || temp2->next->type == PIPE)
+			add_token(&temp, temp2->command, temp2->type);
+		temp2 = temp2->next;
+	}
+	add_token(&temp, temp2->command, temp2->type);
+	return (temp);
+}
+
 t_tokens	*get_tokens(t_data *data, char *str)
 {
 	int			i;
 	t_tokens	*temp;
-	t_tokens	*temp2;
 
 	i = -1;
 	while (str[++i])
@@ -57,14 +73,7 @@ t_tokens	*get_tokens(t_data *data, char *str)
 	}
 	remove_quotes(data->tokens_head, data);
 	get_type_input(data->tokens_head);
-	temp = NULL;
-	temp2 = data->tokens_head;
-	while (temp2->next)
-	{
-		if (temp2->next->type == NORMAL || temp2->next->type == PIPE)
-			add_token(&temp, temp2->command, temp2->type);
-		temp2 = temp2->next;
-	}
-	add_token(&temp, temp2->command, temp2->type);
+	temp = final_tokens(data);
+	free_tokens(data);
 	return (temp);
 }

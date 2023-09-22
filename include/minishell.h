@@ -189,5 +189,7 @@ char			check_quote(char *str);
 char			*ft_mllstrcpy(char *str);
 long long int	ft_atoll(const char *str);
 char			*ft_mllstrcat(char *str1, char *str2, char c);
+char			**init_command(int len);
+bool			check_rd_in(t_data *data, t_tokens *temp);
 
 #endif

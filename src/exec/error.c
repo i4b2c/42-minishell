@@ -19,6 +19,7 @@ int	error_dir(char **command)
 	g_exit_status = 126;
 	write(2, "minishell : Is a directory\n", 28);
 	free_strings(command);
+	free(command);
 	return (g_exit_status);
 }
 
@@ -27,6 +28,7 @@ int	error_nf(char **command)
 	write(2, "minishell : command not found\n", 30);
 	g_exit_status = 127;
 	free_strings(command);
+	free(command);
 	return (g_exit_status);
 }
 
@@ -35,5 +37,6 @@ int	error_access(char **command)
 	perror("minishell");
 	g_exit_status = 126;
 	free_strings(command);
+	free(command);
 	return (g_exit_status);
 }

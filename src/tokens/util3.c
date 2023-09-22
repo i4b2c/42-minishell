@@ -34,6 +34,7 @@ char	*cut_quotes_all(char *input)
 		else
 			output[output_index++] = input[i];
 	}
+	free(input);
 	output[output_index] = '\0';
 	return (output);
 }

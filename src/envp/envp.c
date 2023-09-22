@@ -79,6 +79,7 @@ void	check_exist(t_data *data, char *input,
 			command[1] = calloc(1, 1);
 			command[2] = NULL;
 		}
+		free(temp_var);
 		change_exist_env(data, command);
 	}
 	else
@@ -118,7 +119,7 @@ void	change_env(t_data *data, char **input)
 			command = ft_split(input[j], '=');
 			check_exist(data, input[j], command, temp_var);
 			free_strings(command);
+			free(command);
 		}
 	}
-	free_strings(input);
 }

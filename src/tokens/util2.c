@@ -21,6 +21,7 @@ void	remove_head_quotes(t_tokens *head, t_data *data)
 		else if (head->command[0] == '"')
 		{
 			head->command = get_path_input(head->command, data);
+			free(data->input);
 			head->command = remove_double_quotes(head->command);
 		}
 	}
@@ -34,6 +35,8 @@ void	remove_quotes(t_tokens *head, t_data *data)
 	{
 		if (head->command[0] != '\'')
 			head->command = get_path_input(head->command, data);
+		free(data->input);
+		data->input = NULL;
 		head->command = cut_quotes_all(head->command);
 		head = head->next;
 	}
