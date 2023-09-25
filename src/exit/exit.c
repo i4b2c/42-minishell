@@ -16,27 +16,22 @@ void	check_exit(t_data *data)
 {
 	long long	num_exit;
 
+	num_exit = 0;
 	if (len_data(data->tokens_head) > 2)
 	{
-		free_data(&data);
-		write(2, "minishell: too many arguments\n", 31);
-		exit(1);
+		write(STDERR_FILENO, "minishell: too many arguments\n", 31);
+		num_exit = 1;
 	}
 	else if (data->tokens_head->next)
 	{
 		if (check_non_numeric(data->tokens_head->next->command))
 		{
-			write(2, "minishell: numeric argument required\n", 38);
-			free_data(&data);
-			exit(2);
+			write(STDERR_FILENO, "minishell: numeric argument required\n", 38);
+			num_exit = 2;
 		}
 		num_exit = ft_atoll(data->tokens_head->next->command);
-		free_data(&data);
-		exit((int)num_exit);
 	}
-	else
-	{
-		free_data(&data);
-		exit(0);
-	}
+	free(&data);
+	write(STDOUT_FILENO, "exit\n", 5);
+	exit(num_exit);
 }
