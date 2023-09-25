@@ -32,6 +32,8 @@ bool	check_non_numeric(char *str)
 		}
 		i++;
 	}
+	if (i > 18)
+		return (true);
 	return (false);
 }
 
