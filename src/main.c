@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/22 16:59:42 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/09/25 12:32:52 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	minishell(t_data *data, int ac, char **av, char **envp)
 				check_exit(data);
 			exec_tokens(data);
 			free(input);
-			unlink(TEMP_FILE);
+			unlink_all();
 			free_tokens(data);
 		}
 	}

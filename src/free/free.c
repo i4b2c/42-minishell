@@ -33,6 +33,7 @@ void	free_data(t_data **data)
 		free((*data)->var_head);
 		(*data)->var_head = temp_var;
 	}
+	unlink_all();
 	free_tokens(*data);
 	free(*data);
 	*data = NULL;

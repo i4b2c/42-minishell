@@ -97,6 +97,7 @@ void			check_exist(t_data *data, char *input,
 void			change_env(t_data *data, char **input);
 void			print_env(t_data *data);
 
+void			unlink_all(void);
 int				error(char *str, char str_extra);
 
 int				error_dir(char **command);

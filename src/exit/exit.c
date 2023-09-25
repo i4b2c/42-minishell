@@ -12,6 +12,12 @@
 
 #include "../../include/minishell.h"
 
+void	unlink_all(void)
+{
+	unlink(TEMP_FILE_OUT);
+	unlink(TEMP_FILE);
+}
+
 void	check_exit(t_data *data)
 {
 	long long	num_exit;
