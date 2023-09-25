@@ -20,7 +20,7 @@ void	child_process(int signum)
 	{
 		ft_putchar_fd('\n', STDOUT_FILENO);
 		g_exit_status = 130;
-		exit(130);
+		exit(g_exit_status);
 	}
 }
 

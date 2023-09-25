@@ -22,6 +22,7 @@ bool	check_extra_chdir(char *str)
 	temp = ft_split(str, ' ');
 	len = len_strings(temp);
 	free_strings(temp);
+	free(temp);
 	if (len > 1)
 		return (true);
 	return (false);
@@ -41,6 +42,5 @@ void	exec_chdir(char **input)
 		g_exit_status = 1;
 		return ;
 	}
-	free_strings(input);
 	return ;
 }
