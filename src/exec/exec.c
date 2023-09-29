@@ -44,8 +44,8 @@ void	ft_execve(char **command, t_data *data)
 
 void	exec_command(char **command, t_data *data)
 {
-	pid_t	pid;
-	int		status;
+	pid_t		pid;
+	int			status;
 
 	pid = fork();
 	if (pid == 0)
@@ -56,7 +56,8 @@ void	exec_command(char **command, t_data *data)
 	else
 	{
 		waitpid(pid, &status, 0);
-		g_exit_status = WEXITSTATUS(status);
+		if (status != 2)
+			g_exit_status = WEXITSTATUS(status);
 	}
 }
 
