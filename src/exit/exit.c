@@ -34,7 +34,7 @@ void	check_exit(t_data *data)
 		else
 			num_exit = ft_atoll(data->tokens_head->next->command);
 	}
-	else if (len_data(data->tokens_head) > 2)
+	if (len_data(data->tokens_head) > 2)
 	{
 		write(STDERR_FILENO, "minishell: too many arguments\n", 31);
 		num_exit = 1;

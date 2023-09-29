@@ -111,4 +111,5 @@ void	print_export(t_data *data)
 	sort_string(temp_str);
 	print_export_value(temp_str);
 	free_strings(temp_str);
+	free(temp_str);
 }
