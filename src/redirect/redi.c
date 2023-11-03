@@ -70,7 +70,6 @@ void	execute_rdin(int fd, char *str)
 void	read_stdin(char *str, int fd_temp)
 {
 	int		fd;
-	int		check_unlink;
 	pid_t	pid;
 
 	fd = open(TEMP_FILE, O_WRONLY | O_CREAT | O_TRUNC, 0666);

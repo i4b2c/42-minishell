@@ -28,9 +28,28 @@ bool	check_extra_chdir(char *str)
 	return (false);
 }
 
-void	exec_chdir(char **input)
+void	exec_cd_home(t_data *data)
 {
-	if (len_strings(input) > 2 || check_extra_chdir(input[1]))
+	char	*home;
+
+	home = ft_getenv("HOME", data, false);
+	if (home[0] == 0)
+	{
+		write(2, "minishell : cd: HOME not set\n", 29);
+		free(home);
+		g_exit_status = 1;
+		return ;
+	}
+	else
+		chdir(home);
+	free(home);
+}
+
+void	exec_chdir(char **input, t_data *data)
+{
+	if (len_strings(input) == 1)
+		exec_cd_home(data);
+	else if (len_strings(input) > 2 || check_extra_chdir(input[1]))
 	{
 		write(2, "minishell: too many arguments\n", 30);
 		g_exit_status = 1;

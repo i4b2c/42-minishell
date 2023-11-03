@@ -20,6 +20,7 @@ char	*get_input(void)
 	temp = readline("\033[0;32mminishell $>\033[0m ");
 	input = ft_strtrim(temp, " \t");
 	free(temp);
+	add_history(input);
 	return (input);
 }
 

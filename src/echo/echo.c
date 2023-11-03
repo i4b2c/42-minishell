@@ -19,7 +19,7 @@ int	search_envp(t_data *data, char *cmd)
 	temp_var = data->var_head;
 	while (temp_var)
 	{
-		if (!strncmp(temp_var->var_name, cmd + 1, ft_strlen(cmd) - 1))
+		if (!ft_strncmp(temp_var->var_name, cmd + 1, ft_strlen(cmd) - 1))
 		{
 			ft_printf("%s", temp_var->var_value);
 			return (1);

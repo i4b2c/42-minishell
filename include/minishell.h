@@ -80,11 +80,11 @@ typedef struct s_data
 }				t_data;
 
 bool			check_extra_chdir(char *str);
-void			exec_chdir(char **input);
+void			exec_chdir(char **input, t_data *data);
 
 void			add_var_list(t_varlst **head, t_varlst *new, t_varlst **temp);
 t_varlst		*get_var(char **envp);
-t_data			*get_data(int ac, char **av, char **envp);
+t_data			*get_data(char **envp);
 
 int				search_envp(t_data *data, char *cmd);
 void			exec_echo(t_data *data, char **input);
@@ -106,7 +106,7 @@ int				error_access(char **command);
 void			ft_execve(char **command, t_data *data);
 void			exec_command(char **command, t_data *data);
 void			choose_exec(char **command, t_data *data);
-char			**exec_pipe(t_data *data, char **command, int len, int i);
+char			**exec_pipe(t_data *data, char **command, int i);
 void			exec_tokens(t_data *data);
 
 int				len_tokens(t_tokens *head);

@@ -74,14 +74,14 @@ void	choose_exec(char **command, t_data *data)
 	else if (!ft_strncmp(command[0], "unset", 5))
 		exec_unset(data, command);
 	else if (!ft_strncmp(command[0], "cd", 2))
-		exec_chdir(command);
+		exec_chdir(command, data);
 	else if (!strncmp(command[0], "env", 3))
 		print_env(data);
 	else
 		exec_command(command, data);
 }
 
-char	**exec_pipe(t_data *data, char **command, int len, int i)
+char	**exec_pipe(t_data *data, char **command, int i)
 {
 	int	fd;
 

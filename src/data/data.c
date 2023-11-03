@@ -55,7 +55,7 @@ t_varlst	*get_var(char **envp)
 	return (head_var);
 }
 
-t_data	*get_data(int ac, char **av, char **envp)
+t_data	*get_data(char **envp)
 {
 	t_data	*temp_data;
 

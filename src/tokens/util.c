@@ -56,12 +56,10 @@ void	add_list(t_data *data, t_varlst *temp_var)
 
 void	get_type_input(t_tokens *temp)
 {
-	t_type	type_temp;
 	int		len_string;
 
 	while (temp)
 	{
-		type_temp = NORMAL;
 		len_string = ft_strlen(temp->command);
 		if (temp->command[0] == '<'
 			&& temp->command[1] == '<' && len_string == 2)

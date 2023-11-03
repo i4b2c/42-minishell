@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/25 12:32:52 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/02 14:44:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 volatile long long	g_exit_status = 0;
 
-void	minishell(t_data *data, int ac, char **av, char **envp)
+void	minishell(t_data *data, char **envp)
 {
 	char	*input;
 
-	data = get_data(ac, av, envp);
+	data = get_data(envp);
 	init_signal();
 	while (1)
 	{
@@ -30,12 +30,12 @@ void	minishell(t_data *data, int ac, char **av, char **envp)
 			free(input);
 		else
 		{
-			add_history(input);
 			input = new_input(input);
 			data->tokens_head = get_tokens(data, input);
-			if (!strncmp(data->tokens_head->command, "exit", 4))
+			if (!ft_strncmp(data->tokens_head->command, "exit", 5))
 				check_exit(data);
-			exec_tokens(data);
+			else
+				exec_tokens(data);
 			free(input);
 			unlink_all();
 			free_tokens(data);
@@ -51,6 +51,6 @@ int	main(int ac, char **av, char **envp)
 	if (ac > 1 && av)
 		error(ARGS, '\0');
 	else
-		minishell(data, ac, av, envp);
+		minishell(data, envp);
 	return (0);
 }

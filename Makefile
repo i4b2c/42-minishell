@@ -104,7 +104,7 @@ $(NAME): $(OBJS) libft_compile
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(MKDIR) $(dir $@)
 	@echo $(AMARELO)"Compilando        " $(<:$(SRC_DIR)/%=%) $(BRANCO) "\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
-	@$(CC) -c $< -o $@
+	@$(CC) $(FLAGS) -c $< -o $@
 
 
 clean:	libft_clean

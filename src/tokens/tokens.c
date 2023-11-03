@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: icaldas <icaldas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 16:16:58 by icaldas           #+#    #+#             */
-/*   Updated: 2023/09/22 17:00:21 by icaldas          ###   ########.fr       */
+/*   Updated: 2023/11/01 19:23:09 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ t_tokens	*get_tokens(t_data *data, char *str)
 		if (str[i] == '\0')
 			break ;
 	}
-	remove_quotes(data->tokens_head, data);
 	get_type_input(data->tokens_head);
+	remove_quotes(data->tokens_head, data);
 	temp = final_tokens(data);
 	free_tokens(data);
 	return (temp);

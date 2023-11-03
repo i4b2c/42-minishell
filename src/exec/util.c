@@ -45,7 +45,7 @@ bool	choose_redirect(int *i,
 	else if (temp->type == PIPE)
 	{
 		data->check_pipe = true;
-		command = exec_pipe(data, command, len_tokens(data->tokens_head), *i);
+		command = exec_pipe(data, command, *i);
 		(*i) = 0;
 	}
 	return (true);

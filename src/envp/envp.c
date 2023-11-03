@@ -21,7 +21,7 @@ bool	check_exist_env(t_data *data, char *input)
 	temp_var = data->var_head;
 	while (temp_var)
 	{
-		if (!ft_strncmp(temp_var->var_name, input, ft_strlen(input)))
+		if (!ft_strncmp(temp_var->var_name, input, ft_strlen(input) + 1))
 			return (true);
 		temp_var = temp_var->next;
 	}
@@ -76,7 +76,7 @@ void	check_exist(t_data *data, char *input,
 	{
 		if (!command[1] && ft_strchr(input, '='))
 		{
-			command[1] = calloc(1, 1);
+			command[1] = ft_calloc(1, 1);
 			command[2] = NULL;
 		}
 		free(temp_var);
@@ -90,7 +90,7 @@ void	check_exist(t_data *data, char *input,
 		else if (!ft_strchr(input, '='))
 			temp_var->var_value = NULL;
 		else
-			temp_var->var_value = calloc(1, 1);
+			temp_var->var_value = ft_calloc(1, 1);
 		temp_var->next = NULL;
 		add_list(data, temp_var);
 		temp_var = temp_var->next;

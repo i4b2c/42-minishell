@@ -38,10 +38,11 @@ void	exec_unset(t_data *data, char **input)
 			g_exit_status = 1;
 		}
 		temp_var = data->var_head;
+		temp = NULL;
 		while (temp_var)
 		{
-			if (temp_var->next && !strncmp(temp_var->next->var_name,
-					input[i], ft_strlen(input[i])))
+			if (temp_var->next && !ft_strncmp(temp_var->next->var_name,
+					input[i], ft_strlen(input[i]) + 1))
 			{
 				free_unset(temp, temp_var);
 				break ;
