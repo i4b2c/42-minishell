@@ -35,3 +35,13 @@ bool	check_input(char *str)
 	}
 	return (true);
 }
+
+bool	invalid_operator(char *str, int i)
+{
+	if (str[i] == '{' || str[i] == '}'
+		|| str[i] == '(' || str[i] == ')'
+		|| str[i] == '[' || str[i] == ']'
+		|| str[i] == ';' || str[i] == '&' || str[i] == '*' || str[i] == '\\')
+		return (error("unexpected tokens", str[i]));
+	return (true);
+}

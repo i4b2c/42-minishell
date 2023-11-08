@@ -12,14 +12,18 @@
 
 #include "../../include/minishell.h"
 
-bool	invalid_operator(char *str, int i)
+bool	check_next_char(char *str, int i)
 {
-	if (str[i] == '{' || str[i] == '}'
-		|| str[i] == '(' || str[i] == ')'
-		|| str[i] == '[' || str[i] == ']'
-		|| str[i] == ';' || str[i] == '&' || str[i] == '*' || str[i] == '\\')
-		return (error("unexpected tokens", str[i]));
-	return (true);
+	while(str[i])
+	{
+		if(str[i] != '\t' && str[i] != ' ')
+		{
+			if(str[i + 1] == '<' || str[i + 1] == '>')
+				return (true);
+		}
+		i++;
+	}
+	return (false);
 }
 
 bool	check_redirect(char *str, int i)
@@ -37,6 +41,8 @@ bool	check_redirect(char *str, int i)
 		if (str[i + 2] == '<' || str[i + 2] == '>')
 			return (error("unexpected token", '>'));
 	}
+	if (check_next_char(str, i))
+		return (error("unexpected token", '>'));
 	return (true);
 }
 
