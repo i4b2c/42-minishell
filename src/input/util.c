@@ -17,7 +17,7 @@ bool	check_next_char(char *str, int i)
 	char	temp;
 
 	temp = str[i];
-	while(str[i] == temp)
+	while (str[i] == temp)
 		i++;
 	while (str[i])
 	{
