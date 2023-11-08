@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:52:28 by icaldas           #+#    #+#             */
-/*   Updated: 2023/11/02 14:44:35 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/08 18:49:54 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	minishell(t_data *data, char **envp)
 			input = new_input(input);
 			data->tokens_head = get_tokens(data, input);
 			if (!ft_strncmp(data->tokens_head->command, "exit", 5))
-				check_exit(data);
+				check_exit(data, input);
 			else
 				exec_tokens(data);
 			free(input);

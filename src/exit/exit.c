@@ -20,7 +20,15 @@ void	unlink_all(void)
 	unlink(TEMP_FILE);
 }
 
-void	check_exit(t_data *data)
+void	end_exit(t_data *data, char *input)
+{
+	free(input);
+	unlink_all();
+	free_tokens(data);
+	exit(g_exit_status);
+}
+
+void	check_exit(t_data *data, char *input)
 {
 	write(STDOUT_FILENO, "exit\n", 5);
 	if (data->tokens_head->next)
@@ -29,15 +37,16 @@ void	check_exit(t_data *data)
 		{
 			write(STDERR_FILENO, "minishell: numeric argument required\n", 38);
 			g_exit_status = 2;
+			end_exit(data, input);
+		}
+		else if (len_data(data->tokens_head) > 2)
+		{
+			write(STDERR_FILENO, "minishell: too many arguments\n", 31);
+			g_exit_status = 1;
+			return ;
 		}
 		else
 			g_exit_status = ft_atoll(data->tokens_head->next->command);
-	}
-	if (len_data(data->tokens_head) > 2)
-	{
-		write(STDERR_FILENO, "minishell: too many arguments\n", 31);
-		g_exit_status = 1;
-		return ;
 	}
 	free_data(&data);
 	exit(g_exit_status);

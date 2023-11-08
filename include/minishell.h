@@ -119,7 +119,7 @@ int				pipe_string(t_tokens *tokens);
 char			*check_command(char *command, char **path);
 char			*ft_getenv(char *str, t_data *data, bool op);
 
-void			check_exit(t_data *data);
+void			check_exit(t_data *data, char *input);
 
 int				num_data_env(t_data *data);
 char			*copy_var(t_varlst *temp);
