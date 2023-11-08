@@ -71,6 +71,7 @@ int	get_new_token(char *str, int i, t_tokens **head)
 {
 	int	checker;
 
+	checker = -1;
 	if (str[i] == '<' && str[i + 1] == '<')
 	{
 		checker = add_token(head, NULL, RDR_RD_IN);

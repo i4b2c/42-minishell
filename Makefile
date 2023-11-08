@@ -79,7 +79,7 @@ RM = rm -f
 MKDIR = mkdir -p
 
 #FLAGS
-FLAGS = -g -Werror -Wextra -Wall -lreadline
+FLAGS = -g -Werror -Wextra -Wall
 OUTPUT = -o
 
 all: $(NAME)
@@ -99,7 +99,7 @@ libft_fclean:
 
 $(NAME): $(OBJS) libft_compile
 	@echo $(VERDE)"Criando executavel minishell" $(BRANCO) "\t\t[" $(VERDE)"✔"$(BRANCO) "]" $(RESETAR)
-	@$(CC) $(MAIN) $(OBJS) $(LIBFT_A) $(FLAGS) $(OUTPUT) $(NAME)
+	@$(CC) $(MAIN) $(OBJS) $(LIBFT_A) $(FLAGS) -lreadline $(OUTPUT) $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(MKDIR) $(dir $@)
