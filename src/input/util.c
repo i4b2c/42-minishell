@@ -14,12 +14,19 @@
 
 bool	check_next_char(char *str, int i)
 {
+	char	temp;
+
+	temp = str[i];
+	while(str[i] == temp)
+		i++;
 	while (str[i])
 	{
 		if (str[i] != '\t' && str[i] != ' ')
 		{
 			if (str[i + 1] == '<' || str[i + 1] == '>')
 				return (true);
+			else
+				return (false);
 		}
 		i++;
 	}
